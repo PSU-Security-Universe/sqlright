@@ -1,0 +1,17 @@
+CREATE TABLE test.wl13168(id INT PRIMARY KEY, data VARCHAR(50));
+SELECT * FROM test.wl13168 ORDER BY id;
+DELETE FROM test.wl13168;
+SELECT * FROM test.wl13168 ORDER BY id;
+SELECT * FROM test.wl13168 ORDER BY id;
+SELECT * FROM test.wl13168 ORDER BY id;
+DELETE FROM test.wl13168;
+SELECT * FROM test.wl13168 ORDER BY id;
+SELECT * FROM test.wl13168 ORDER BY id;
+SELECT * FROM test.wl13168 ORDER BY id;
+DELETE FROM test.wl13168;
+DELETE FROM test.wl13168;
+DELETE FROM test.wl13168;
+SET @@global.local_infile = 0;
+SELECT * FROM test.wl13168 ORDER BY id;
+DROP TABLE test.wl13168;
+SET @@global.local_infile = 1;

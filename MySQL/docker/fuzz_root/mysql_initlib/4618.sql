@@ -1,0 +1,12 @@
+SET @saved_thread_cache_size=@@thread_cache_size;
+SET GLOBAL thread_cache_size=5;
+SET GLOBAL thread_cache_size = 2;
+SHOW STATUS LIKE 'Threads_cached';
+SET GLOBAL thread_cache_size = 0;
+SHOW STATUS LIKE 'Threads_cached';
+CREATE USER u1;
+SET GLOBAL thread_cache_size = 5;
+GRANT SYSTEM_VARIABLES_ADMIN ON *.* TO u1;
+SET GLOBAL thread_cache_size=5;
+DROP USER u1;
+SET GLOBAL thread_cache_size=@saved_thread_cache_size;

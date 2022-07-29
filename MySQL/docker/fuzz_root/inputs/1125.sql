@@ -1,0 +1,10 @@
+SET sql_mode = 'NO_ENGINE_SUBSTITUTION';
+CREATE TABLE t1 ( spID int(10) unsigned, userID int(10) unsigned, score smallint(5) unsigned, lsg char(40), date date );
+INSERT INTO t1 VALUES (1,1,1,'','0000-00-00');
+ANALYZE TABLE t1,t2;
+lock tables t1 read,t2 write;
+unlock tables;
+set @previous_sql_mode_htnt542nh=@@sql_mode;
+set sql_mode=(select replace(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
+create table t1 (foo int);
+insert into t1 values (1);

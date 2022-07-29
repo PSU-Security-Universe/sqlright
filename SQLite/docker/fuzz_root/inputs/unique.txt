@@ -1,0 +1,3 @@
+CREATE TABLE t1(   a int PRIMARY KEY,   b int UNIQUE,   c text);
+INSERT INTO t1(a,b,c) VALUES(1,2,3);
+SELECT * FROM t1 ORDER BY a;

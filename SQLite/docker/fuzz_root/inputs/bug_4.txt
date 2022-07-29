@@ -1,0 +1,6 @@
+CREATE TABLE v0       ( v2 INT, v1 INT );
+INSERT INTO v0 VALUES ( 1     , 10      );
+INSERT INTO v0 VALUES ( 1     , 10      );
+INSERT INTO v0 VALUES ( 1     , 3       );
+INSERT INTO v0 VALUES ( 1     , 3       );
+SELECT COUNT(*) IN ( SELECT v2 FROM v0 ORDER BY max ( nth_value ( v1, 10 ) OVER( ), COUNT ( ) ) ) FROM v0;

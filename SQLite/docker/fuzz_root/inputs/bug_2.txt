@@ -1,0 +1,5 @@
+CREATE TABLE v0 ( v1 PRIMARY KEY , v2 , v3 ) ;
+INSERT INTO v0 VALUES ( '111' , '222' , '333' ) ;
+CREATE TABLE v4 ( v5 PRIMARY KEY ) ;
+INSERT INTO v4 VALUES ( '0' ) ;
+SELECT COUNT ( * ) FROM v4 JOIN v0 ON likely( v0.v3 = v0.v1 ) AND v0.v3 = '111' WHERE v0.v1;

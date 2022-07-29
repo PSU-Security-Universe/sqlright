@@ -1,0 +1,17 @@
+create table t1 (sid char(20), id int(2) NOT NULL auto_increment, key(sid, id)) engine=myisam;
+insert into t1 values ('skr',NULL),('skr',NULL),('test',NULL);
+select * from t1;
+insert into t1 values ('rts',NULL),('rts',NULL),('test',NULL);
+select * from t1;
+drop table t1;
+create table t1 (id int primary key auto_increment, data int, unique(data)) engine=myisam;
+insert ignore into t1 values(NULL,100),(NULL,110),(NULL,120);
+insert ignore into t1 values(NULL,10),(NULL,20),(NULL,110),(NULL,120),(NULL,100),(NULL,90);
+insert ignore into t1 values(NULL,130),(NULL,140),(500,110),(550,120),(450,100),(NULL,150);
+select * from t1 order by id;
+drop table t1;
+CREATE TABLE t1(a INT PRIMARY KEY, b INT) ENGINE=MyISAM;
+CREATE TABLE t2(a INT) ENGINE=MyISAM;
+CREATE TRIGGER trig1 BEFORE INSERT ON t1 FOR EACH ROW INSERT INTO t2 VALUES (1);
+INSERT INTO t1(b) VALUES (1);
+DROP TABLE t2, t1;

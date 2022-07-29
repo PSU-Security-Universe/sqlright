@@ -1,0 +1,7 @@
+CREATE TABLE t1(a, b);
+INSERT INTO t1 VALUES(1, 'one');
+INSERT INTO t1 VALUES(2, 'two');
+INSERT INTO t1 VALUES(3, 'three');
+CREATE INDEX i1 ON t1(b || 'x');
+SELECT 'TWOX' == (b || 'x') FROM t1 WHERE (b || 'x')>'onex'
+SELECT 'TWOX' == (b || 'x') COLLATE nocase  FROM t1 WHERE (b || 'x')>'onex'

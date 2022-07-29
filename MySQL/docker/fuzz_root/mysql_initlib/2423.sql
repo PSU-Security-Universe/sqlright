@@ -1,0 +1,12 @@
+do lcase(ltrim(from_unixtime(0,' %T ')));
+do _cp852 "" <= lcase(trim(leading 1 from 12222)) not between '1' and '2';
+do upper(substring(1.111111111111111111 from '2n'));
+do nullif(1,'-' between lcase(right(11111111," 7,]" ))and '1');
+do upper(right(198039009115594390000000000000000000000.000000,35));
+do concat('111','11111111111111111111111111', substring_index(uuid(),0,1.111111e+308));
+do replace(ltrim(from_unixtime(0,' %T ')), '0', '1');
+do insert(ltrim(from_unixtime(0,' %T ')), 2, 1, 'hi');
+set @old_collation_connection=@@collation_connection;
+set collation_connection="utf8_general_ci";
+do replace(ltrim(from_unixtime(0,' %T ')), '0', '1');
+set collation_connection=@old_collation_connection;

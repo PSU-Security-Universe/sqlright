@@ -1,0 +1,16 @@
+SET @global_saved_tmp =  @@global.offline_mode;
+SET @global_autocommit =  @@global.autocommit;
+SET @@global.autocommit= OFF;
+CREATE USER 'user2'@'localhost';
+START TRANSACTION;
+CREATE TABLE t1 (c1 int,c2 char(10));
+INSERT INTO t1 VALUES (1,'aaaaaaaaaa');
+COMMIT;
+INSERT INTO t1 VALUES (2,'bbbbbbbbbb');
+SELECT * FROM t1 ORDER BY c1;
+DROP TABLE t1;
+SET GLOBAL offline_mode = ON;
+SELECT COUNT(USER) FROM INFORMATION_SCHEMA.PROCESSLIST;
+DROP USER 'user2'@'localhost';
+SET @@global.offline_mode = @global_saved_tmp;
+SET @@global.autocommit= @global_autocommit;

@@ -1,0 +1,13 @@
+set big_tables=0;
+set cte_max_recursion_depth=50000;
+flush status;
+with recursive qn as (select * from qn2), qn2 as (select * from qn) select * from qn;
+create table t1(b int);
+insert into t1 values(10),(20),(10);
+WITH RECURSIVE qn AS (select 1 union all select distinct 3 from qn) select * from qn;
+show create table u;
+set @c=0, @d=0;
+delete from t1;
+CREATE TABLE employees ( ID INT PRIMARY KEY, NAME VARCHAR(100), MANAGER_ID INT, INDEX (MANAGER_ID), FOREIGN KEY (MANAGER_ID) REFERENCES employees(ID) );
+INSERT INTO employees VALUES (333, "Yasmina", NULL), (198, "John", 333), (692, "Tarek", 333), (29, "Pedro", 198), (4610, "Sarah", 29), (72, "Pierre", 29), (123, "Adil", 692);
+ANALYZE TABLE employees;

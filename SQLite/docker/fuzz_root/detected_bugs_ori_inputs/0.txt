@@ -1,0 +1,15 @@
+Query:
+CREATE TABLE v0 ( v1 ) ;
+CREATE TABLE v2 ( v3 VARCHAR(1) ) ;
+CREATE VIEW v4 ( v6 , v5 ) AS SELECT DISTINCT v3 , 'MED PKG' FROM v2 ;
+CREATE UNIQUE INDEX v7 ON v2 ( v3 , v3 , v3 ) WHERE v3 BETWEEN 'x' AND 'v0' OR v3 = 'SM CASE' ;
+INSERT INTO v2 VALUES ( 'v1' ) ,( 10 ) ,( 10 ) ,( 10 ) ,( 10 ) ,( 10 ) ,( 0 ) ,( 10 ) ,( 10 ) ,( 'v0' ) ,( 'v1' ) ,( 'x' ) ,( 'v0' ) ,( 'av3 c' ) ,( 'x' ) ,( 'SM BOX' ) ,( 'v0' ) ,( 'v0' ) ,( 'v1' ) ,( 10 ) ,( 0 ) ,( 10 ) ;
+
+SELECT 'BEGIN VERI 0';
+SELECT COUNT ( * ) FROM v4 WHERE v6 = '10';
+SELECT 'END VERI 0';
+SELECT 'BEGIN VERI 1';
+SELECT SUM(CAST(( v6 = '10' ) AS BOOL)!=0)  FROM  v4 ;
+SELECT 'END VERI 1';
+
+Result string:

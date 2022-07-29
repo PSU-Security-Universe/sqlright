@@ -1,0 +1,1 @@
+SELECT support FROM INFORMATION_SCHEMA.ENGINES WHERE engine = 'innodb';

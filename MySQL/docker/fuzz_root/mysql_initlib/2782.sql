@@ -1,0 +1,13 @@
+SET SESSION DEFAULT_STORAGE_ENGINE = InnoDB;
+drop table if exists t1;
+create table t1 (id int unsigned not null auto_increment primary key, a text, b text);
+start transaction;
+load data infile '/data/yu/Squirrel_DBMS_Fuzzing/MySQL_source/mysql-server-inst/bld/mysql-test/var/std_data/loaddata2.dat' ignore into table t1 fields terminated by ',' enclosed by '''' (a, b);
+commit;
+select count(*) from t1;
+truncate table t1;
+start transaction;
+load data infile '/data/yu/Squirrel_DBMS_Fuzzing/MySQL_source/mysql-server-inst/bld/mysql-test/var/std_data/loaddata2.dat' ignore into table t1 fields terminated by ',' enclosed by '''' (a, b);
+rollback;
+select count(*) from t1;
+drop table t1;

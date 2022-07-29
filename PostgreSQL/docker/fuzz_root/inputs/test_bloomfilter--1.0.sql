@@ -1,0 +1,1 @@
+\echo Use "CREATE EXTENSION test_bloomfilter" to load this file. \quitCREATE FUNCTION test_bloomfilter(power integer,    nelements bigint,    seed integer DEFAULT -1,    tests integer DEFAULT 1)RETURNS pg_catalog.void STRICTAS 'MODULE_PATHNAME' LANGUAGE C;

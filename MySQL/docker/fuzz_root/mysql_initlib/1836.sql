@@ -1,0 +1,15 @@
+show create table t1;
+flush tables;
+show create table t1;
+drop table t1;
+create table t1 (c1 int, c2 int, c3 int, c4 int, c5 int, c6 int, c7 int,  c8 int, c9 int, c10 int, c11 int, c12 int, c13 int, c14 int, c15 int, c16 int);
+show create table t1;
+flush tables;
+show create table t1;
+alter table t1 add key  a065_long_123456789_123456789_123456789_123456789_123456789_1234 ( c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16);
+drop table t1;
+create table t1 (c1 int, c2 int, c3 int, c4 int, c5 int, c6 int, c7 int,  c8 int, c9 int, c10 int, c11 int, c12 int, c13 int, c14 int, c15 int,  c16 int, c17 int);
+alter table t1 add key i1 ( c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16, c17);
+alter table t1 add key  a001_long_123456789_123456789_123456789_123456789_123456789_12345 (c1);
+show create table t1;
+drop table t1;

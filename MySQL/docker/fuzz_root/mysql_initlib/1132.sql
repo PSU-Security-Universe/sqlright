@@ -1,0 +1,14 @@
+SELECT @@GLOBAL.innodb_log_file_size;
+SET @@local.innodb_log_file_size=1;
+SET @@session.innodb_log_file_size=1;
+SET @@GLOBAL.innodb_log_file_size=1;
+SET @@GLOBAL.innodb_log_file_size=DEFAULT;
+SELECT COUNT(@@GLOBAL.innodb_log_file_size);
+SELECT @@GLOBAL.innodb_log_file_size = VARIABLE_VALUE FROM performance_schema.global_variables WHERE VARIABLE_NAME='innodb_log_file_size';
+SELECT COUNT(@@GLOBAL.innodb_log_file_size);
+SELECT COUNT(VARIABLE_VALUE) FROM performance_schema.global_variables  WHERE VARIABLE_NAME='innodb_log_file_size';
+SELECT @@innodb_log_file_size = @@GLOBAL.innodb_log_file_size;
+SELECT COUNT(@@local.innodb_log_file_size);
+SELECT COUNT(@@SESSION.innodb_log_file_size);
+SELECT COUNT(@@GLOBAL.innodb_log_file_size);
+SELECT innodb_log_file_size = @@SESSION.innodb_log_file_size;

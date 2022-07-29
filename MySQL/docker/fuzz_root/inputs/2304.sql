@@ -1,0 +1,5 @@
+CREATE TABLE t1 (pk INTEGER PRIMARY KEY, i1 TINYINT, u1 TINYINT UNSIGNED, i2 SMALLINT, u2 SMALLINT UNSIGNED, i3 MEDIUMINT, u3 MEDIUMINT UNSIGNED, i4 INTEGER, u4 INTEGER UNSIGNED, i8 BIGINT, u8 BIGINT UNSIGNED);
+INSERT INTO t1 VALUES (0, -128, 0, -32768, 0, -8388608, 0, -2147483648, 0, -9223372036854775808, 0), (1, -1, 0, -1, 0, -1, 0, -1, 0, -1, 0), (2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), (3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), (4, 127, 255, 32767, 65535, 8388607, 16777215, 2147483647, 4294967295, 9223372036854775807, 18446744073709551615);
+set @iv= -9223372036854775809;
+prepare s1 from "SELECT i1 = ? AS a, u1 = ? AS au, i2 = ? AS b, u2 = ? AS bu, i3 = ? AS c, u3 = ? AS cu, i4 = ? AS d, u4 = ? AS du, i8 = ? AS e, u8 = ? AS eu FROM t1";
+execute s1 using @iv, @iv, @iv, @iv, @iv, @iv, @iv, @iv, @iv, @iv;

@@ -1,0 +1,8 @@
+CREATE TABLE t4(a, b);
+INSERT INTO t4 VALUES('.ABC', 1);
+INSERT INTO t4 VALUES('.abc', 2);
+INSERT INTO t4 VALUES('.ABC', 3);
+INSERT INTO t4 VALUES('.abc', 4);
+SELECT * FROM t4 WHERE substr(a, 2) = 'abc' COLLATE NOCASE ORDER BY substr(a, 2), b;
+CREATE INDEX i4 ON t4( substr(a, 2) COLLATE NOCASE, b );
+SELECT * FROM t4 WHERE substr(a, 2) = 'abc' COLLATE NOCASE ORDER BY substr(a, 2), b;

@@ -1,0 +1,17 @@
+drop table if exists t1;
+create table t1 ( pk1 int not null auto_increment primary key, b bit(64) ) engine=archive;
+show create table t1;
+insert into t1 values  (NULL,b'1111111111111111111111111111111111111111111111111111111111111111'), (NULL,b'1000000000000000000000000000000000000000000000000000000000000000'), (NULL,b'0000000000000000000000000000000000000000000000000000000000000001'), (NULL,b'1010101010101010101010101010101010101010101010101010101010101010'), (NULL,b'0101010101010101010101010101010101010101010101010101010101010101');
+select hex(b) from t1 order by pk1;
+drop table t1;
+create table t1 ( pk1 int not null auto_increment primary key, b bit(9) ) engine=archive;
+insert into t1 values  (NULL,b'000000000'), (NULL,b'000000001'), (NULL,b'000000010'), (NULL,b'000000011'), (NULL,b'000000100');
+select hex(b) from t1 order by pk1;
+drop table t1;
+create table t1 (a bit(7), b bit(9)) engine = archive;
+insert into t1 values  (94, 46), (31, 438), (61, 152), (78, 123), (88, 411), (122, 118), (0, 177),     (75, 42), (108, 67), (79, 349), (59, 188), (68, 206), (49, 345), (118, 380),    (111, 368), (94, 468), (56, 379), (77, 133), (29, 399), (9, 363), (23, 36),     (116, 390), (119, 368), (87, 351), (123, 411), (24, 398), (34, 202), (28, 499), (30, 83), (5, 178), (60, 343), (4, 245), (104, 280), (106, 446), (127, 403),    (44, 307), (68, 454), (57, 135);
+select a+0 from t1 order by a;
+select b+0 from t1 order by b;
+drop table t1;
+create table t1 ( dummyKey INTEGER NOT NULL AUTO_INCREMENT, a001 TINYINT, a010 TINYINT, a012 TINYINT, a015 TINYINT, a016 TINYINT, a017 TINYINT, a019 TINYINT, a029 TINYINT, a030 TINYINT, a031 TINYINT, a032 TINYINT, a042 TINYINT, a043 TINYINT, a044 TINYINT, a3001 TINYINT, a3002 TINYINT, a3003 TINYINT, a3004 TINYINT, a3005 TINYINT, a3021 TINYINT, a3022 TINYINT, a BIT(6), b BIT(6), c BIT(6), d TINYINT, e TINYINT, f TINYINT, g TINYINT, h TINYINT, i TINYINT, j TINYINT, k TINYINT, l TINYINT, m TINYINT, n TINYINT, o TINYINT, a034 TINYINT, PRIMARY KEY USING HASH (dummyKey) ) engine=archive;
+drop table t1;

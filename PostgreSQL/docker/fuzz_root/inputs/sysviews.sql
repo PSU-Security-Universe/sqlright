@@ -1,0 +1,17 @@
+select count(*) >= 0 as ok from pg_available_extension_versions;
+select count(*) >= 0 as ok from pg_available_extensions;
+select count(*) > 20 as ok from pg_config;
+select count(*) = 0 as ok from pg_cursors;
+select count(*) >= 0 as ok from pg_file_settings;
+select count(*) > 0 as ok from pg_hba_file_rules;
+select count(*) > 0 as ok from pg_locks;
+select count(*) = 0 as ok from pg_prepared_statements;
+select count(*) >= 0 as ok from pg_prepared_xacts;
+select count(*) = 0 as ok from pg_stat_wal_receiver;
+select name, setting from pg_settings where name like 'enable%';
+select count(distinct utc_offset) >= 24 as ok from pg_timezone_names;
+select count(distinct utc_offset) >= 24 as ok from pg_timezone_abbrevs;
+set timezone_abbreviations = 'Australia';
+select count(distinct utc_offset) >= 24 as ok from pg_timezone_abbrevs;
+set timezone_abbreviations = 'India';
+select count(distinct utc_offset) >= 24 as ok from pg_timezone_abbrevs;

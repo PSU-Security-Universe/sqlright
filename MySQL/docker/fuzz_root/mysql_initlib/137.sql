@@ -1,0 +1,9 @@
+SET character_set_client= 'utf8';
+SET character_set_connection= 'utf8';
+SET character_set_results= 'utf8';
+SET character_set_client= 'latin1';
+SET character_set_connection= 'latin1';
+SET character_set_results= 'latin1';
+SET NAMES 'latin1';
+INSTALL COMPONENT "file://component_test_string_service_charset";
+UNINSTALL COMPONENT "file://component_test_string_service_charset";

@@ -1,0 +1,15 @@
+SET @@session.myisam_sort_buffer_size = 4294967296;
+SET @@session.myisam_sort_buffer_size = 8388608;
+set optimizer_switch='semijoin=on,materialization=on,firstmatch=on,loosescan=on,index_condition_pushdown=on,mrr=on,mrr_cost_based=off';
+set @save_storage_engine= @@session.default_storage_engine;
+set session default_storage_engine = MyISAM;
+SET GLOBAL innodb_stats_persistent=0;
+set end_markers_in_json=on;
+CREATE TABLE t1 (a INT);
+INSERT INTO t1 VALUES (1), (2), (3);
+SELECT * FROM t1     WHERE a < 10 INTO OUTFILE '/data/yu/Squirrel_DBMS_Fuzzing/MySQL_source/mysql-server-inst/bld/mysql-test/var/tmp/before_explain.txt';
+EXPLAIN UPDATE t1 SET a = 10 WHERE a < 10;
+FLUSH STATUS;
+FLUSH TABLES;
+SHOW STATUS WHERE (Variable_name LIKE 'Sort%' OR Variable_name LIKE 'Handler_read_%' OR Variable_name = 'Handler_write' OR Variable_name = 'Handler_update' OR Variable_name = 'Handler_delete') AND Value <> 0;
+EXPLAIN FORMAT=JSON UPDATE t1 SET a = 10 WHERE a < 10;;

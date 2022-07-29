@@ -1,0 +1,18 @@
+set names ascii;
+select 'e'='`';
+select 'y'='~';
+create table t1 (a char(1) character set ascii);
+select t1a.a, t1b.a from t1 as t1a, t1 as t1b where t1a.a=t1b.a order by binary t1a.a, binary t1b.a;
+drop table t1;
+SET NAMES ascii;
+SELECT is_ipv4(inet_ntoa('1'));
+SELECT is_ipv6(inet_ntoa('1'));
+SELECT inet6_aton(inet_ntoa('1'));
+SELECT inet6_ntoa(inet_ntoa('1'));
+SELECT inet6_aton(soundex('a'));
+do is_ipv4_mapped(inet6_aton(convert(_ascii "a:" using ascii)));
+CREATE TABLE t1 (v VARCHAR(10) CHARACTER SET ASCII);
+INSERT INTO t1 VALUES('a');
+INSERT INTO t1 VALUES(0xe5);
+SELECT HEX(v) FROM t1;
+DROP TABLE t1;

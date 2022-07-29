@@ -1,0 +1,4 @@
+DROP DATABASE IF EXISTS database1067;
+CREATE DATABASE database1067 WITH ENCODING 'utf8'  TEMPLATE template0;
+CREATE TABLE t0(c0 BIT VARYING(82) , CHECK((t0.c0) BETWEEN (((((((t0.c0)>>(t0.c0)))||(((t0.c0)||(t0.c0)))))>>(t0.c0))) AND (t0.c0))) WITH (autovacuum_analyze_scale_factor=0.1, autovacuum_vacuum_scale_factor=0.01, autovacuum_freeze_max_age=78296546, autovacuum_vacuum_cost_limit=2283, autovacuum_vacuum_cost_delay=99, autovacuum_enabled=1);
+CREATE TEMP TABLE t0(c0 inet  DEFAULT ('85.87.87.211'), c1 bigint  PRIMARY KEY GENERATED ALWAYS AS IDENTITY NULL, c2 REAL  NOT NULL) PARTITION BY LIST((((((((((B'1010101000001011011001110111101')<<(B'1111111111111111111111111111111111000010110110011101110100101111')))|(((B'1001001011000001101110110011110')<<(B'1111111111111111111111111111111111100111100100100110000001100101')))))||((pg_jit_available())::BIT)))<<(CAST((0.85685337)::MONEY AS BIT))))text_minmax_ops);

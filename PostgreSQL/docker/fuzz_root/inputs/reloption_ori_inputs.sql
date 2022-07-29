@@ -1,0 +1,10 @@
+create table v0(v1 INT, v2 INT, v3 INT NOT NULL) WITH (FILLFACTOR=1,FILLFACTOR=1,FILLFACTOR=1);
+insert into v0(v1,v3) values(10,10);
+insert into v0(v1,v3) values(10,10);
+insert into v0(v1,v3) values(10,10);
+insert into v0(v1,v3) values(10,10);
+insert into v0(v1,v3) values(10,10);
+insert into v0(v1,v3) values(10,10);
+insert into v0(v1,v3) values(10,10);
+insert into v0(v1,v3) values(10,10);
+insert into v0(v1,v3) values(10,10);

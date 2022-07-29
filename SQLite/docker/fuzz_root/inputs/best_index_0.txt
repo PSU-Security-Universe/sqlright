@@ -1,0 +1,2 @@
+CREATE VIRTUAL TABLE x1 USING tcl(vtab_command);
+SELECT * FROM x1 WHERE a = 'abc'

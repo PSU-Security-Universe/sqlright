@@ -1,0 +1,17 @@
+SET @@global.slow_query_log=1;
+SELECT 1;
+SET @@global.log_output='TABLE';
+SELECT 1;
+SET @@global.log_output='NONE';
+SELECT 1;
+SET @@global.slow_query_log=0;
+SET @@global.general_log=1;
+SET @@global.log_output='FILE';
+SELECT 1;
+SET @@global.log_output='TABLE';
+SELECT 1;
+SET @@global.log_output='NONE';
+SELECT 1;
+SET @@global.general_log=0;
+TRUNCATE TABLE mysql.general_log;
+TRUNCATE TABLE mysql.slow_log;

@@ -1,0 +1,13 @@
+drop table if exists t1;
+create table t1 (n int not null primary key) engine=myisam;
+begin work;
+insert into t1 values (4);
+insert into t1 values (5);
+rollback;
+show warnings;
+show errors;
+select @@warning_count,@@error_count;
+select * from t1;
+show warnings;
+select @@warning_count;
+drop table t1;

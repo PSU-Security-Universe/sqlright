@@ -1,0 +1,10 @@
+SET @previous_binlog_format__htnt542nh=@@GLOBAL.binlog_format;
+SET @@GLOBAL.binlog_format=STATEMENT;
+SET binlog_format=STATEMENT;
+DROP TABLE IF EXISTS t1;
+SET sql_mode = 'NO_ENGINE_SUBSTITUTION';
+CREATE TABLE t1 (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, name TINYBLOB NOT NULL, modified TIMESTAMP DEFAULT '0000-00-00 00:00:00', INDEX namelocs (name(255))) ENGINE = InnoDB PARTITION BY HASH(id) PARTITIONS 2;
+LOAD DATA LOCAL INFILE '/data/yu/Squirrel_DBMS_Fuzzing/MySQL_source/mysql-server-inst/bld/mysql-test/var/tmp/init_file.txt' INTO TABLE t1 (name);
+DROP TABLE t1;
+SET sql_mode = default;
+SET @@GLOBAL.binlog_format=@previous_binlog_format__htnt542nh;

@@ -1,0 +1,2 @@
+CREATE TABLE tæøå(i INT);
+DROP TABLE tæøå;

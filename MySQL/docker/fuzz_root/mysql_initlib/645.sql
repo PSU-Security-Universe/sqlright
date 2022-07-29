@@ -1,0 +1,3 @@
+set @orig_sql_mode= @@sql_mode;
+EXPLAIN select * from information_schema . innodb_cmp as table1 left outer join mysql . procs_priv_copy as table2 on ( table2 . routine_name = table1 . compress_time ) where not table1 . compress_time <> '2006-09-03 10:11:37.046313' having  table2 . grantor <> '2008-02-28 22:17:05.025739' limit 9;
+select * from information_schema . innodb_cmp as table1 left outer join mysql . procs_priv_copy as table2 on ( table2 . routine_name = table1 . compress_time ) where not table1 . compress_time <> '2006-09-03 10:11:37.046313' having  table2 . grantor <> '2008-02-28 22:17:05.025739' limit 9;

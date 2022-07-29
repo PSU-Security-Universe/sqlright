@@ -1,0 +1,5 @@
+CREATE TABLE t1(x TEXT);
+CREATE TABLE t2(y TEXT);
+INSERT INTO t1 VALUES('good'),('bad');
+INSERT INTO t2 VALUES('good'),('bad');
+SELECT * FROM t1 JOIN t2 ON x=y WHERE x='good' AND y='good';

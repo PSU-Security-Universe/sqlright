@@ -1,0 +1,4 @@
+CREATE TABLE test (c0 REAL);
+CREATE INDEX index_0 ON test(c0 COLLATE NOCASE);
+INSERT INTO test(c0) VALUES ('+/');
+SELECT COUNT ( * ) FROM test WHERE (c0 LIKE '+/');

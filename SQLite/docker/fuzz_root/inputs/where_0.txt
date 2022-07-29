@@ -1,0 +1,7 @@
+CREATE TABLE t1(w int, x int, y int);
+CREATE TABLE t2(p int, q int, r int, s int);
+CREATE INDEX i1w ON t1("w");
+CREATE INDEX i1xy ON t1(`x`,'y' ASC);
+CREATE INDEX i2p ON t2(p);
+CREATE INDEX i2r ON t2(r);
+CREATE INDEX i2qs ON t2(q, s);

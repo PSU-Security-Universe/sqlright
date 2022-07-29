@@ -1,0 +1,7 @@
+CREATE TABLE t1(a, b, c UNIQUE, PRIMARY KEY(a, b)) WITHOUT ROWID;
+INSERT INTO t1 VALUES('a', 'a', 1);
+INSERT INTO t1 VALUES('a', 'b', 2);
+INSERT INTO t1 VALUES('b', 'a', 3);
+INSERT INTO t1 VALUES('b', 'b', 4);
+UPDATE t1 SET c=1 WHERE (a, b) = ('a', 'a');
+SELECT * FROM t1;

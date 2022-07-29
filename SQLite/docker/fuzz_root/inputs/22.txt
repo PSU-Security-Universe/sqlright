@@ -1,0 +1,7 @@
+CREATE TABLE t1(a, b, c);
+CREATE INDEX i1 ON t1(a, b);
+INSERT INTO t1 VALUES('abc', 0, 100);
+SELECT COUNT ( * ) FROM t1 WHERE a>? ;
+SELECT COUNT ( * ) FROM t1 WHERE likelihood(a>?, 0.9) ;
+SELECT * FROM t1 WHERE likely(a>?) ;
+SELECT * FROM t1 WHERE a=? ;

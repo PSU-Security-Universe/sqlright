@@ -1,0 +1,16 @@
+CREATE USER u1;
+GRANT SERVICE_CONNECTION_ADMIN ON *.* TO u1;
+CREATE USER u2;
+CREATE USER u3;
+GRANT SUPER ON *.* TO u3;
+SELECT CURRENT_USER();
+SELECT CURRENT_USER();
+SELECT CURRENT_USER();
+SELECT CURRENT_USER();
+SHOW STATUS LIKE 'Threads_connected';
+SELECT name, type FROM performance_schema.threads WHERE name = 'thread/sql/admin_interface';
+SELECT name, type FROM performance_schema.threads WHERE name = 'thread/sql/admin_interface';
+SELECT CURRENT_USER();
+SELECT CURRENT_USER();
+SELECT @@admin_address, @@admin_port;
+SELECT @@admin_address, @@admin_port;

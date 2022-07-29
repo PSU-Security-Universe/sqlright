@@ -1,0 +1,13 @@
+drop database if exists mysqltest_db1;
+create database mysqltest_db1;
+create table mysqltest_db1.t1 (a int, key(a)) engine=myisam;
+create table mysqltest_db1.t2 (b int);
+insert into mysqltest_db1.t1 values (1), (2);
+insert into mysqltest_db1.t2 values (1);
+flush table mysqltest_db1.t1;
+check table mysqltest_db1.t1;
+repair table mysqltest_db1.t1, mysqltest_db1.t2;
+check table mysqltest_db1.t1, mysqltest_db1.t2;
+check table mysqltest_db1.t1;
+repair table mysqltest_db1.t1;
+drop database mysqltest_db1;

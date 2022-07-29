@@ -1,0 +1,11 @@
+CREATE VIEW vvv AS SELECT c+c || coalesce(c, c) FROM b1, b2 WHERE x=c GROUP BY c HAVING c>0;
+  ALTER TABLE b1 RENAME c TO "a;b";
+  SELECT sql FROM sqlite_master WHERE name='vvv';
+  CREATE VIEW www AS SELECT b FROM b1 UNION ALL SELECT y FROM b2;
+  ALTER TABLE b1 RENAME b TO bbb;
+  SELECT sql FROM sqlite_master WHERE name='www';
+  CREATE VIEW xxx AS SELECT a FROM b1 UNION SELECT x FROM b2 ORDER BY 1 COLLATE nocase;
+  ALTER TABLE b2 RENAME x TO hello;
+  SELECT sql FROM sqlite_master WHERE name='xxx';
+  CREATE VIEW zzz AS SELECT george, ringo FROM b1;
+  ALTER TABLE b1 RENAME a TO aaa;

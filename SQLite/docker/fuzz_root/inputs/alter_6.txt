@@ -1,0 +1,7 @@
+CREATE TABLE c1(a, b, FOREIGN KEY (a, b) REFERENCES p1(c, d));
+CREATE TABLE p1(c, d, PRIMARY KEY(c, d));
+PRAGMA foreign_keys = 1;
+INSERT INTO p1 VALUES(1, 2);
+INSERT INTO p1 VALUES(3, 4);
+ALTER TABLE p1 RENAME d TO "silly name";
+SELECT sql FROM sqlite_master WHERE name IN ('c1', 'p1');

@@ -1,0 +1,42 @@
+Global:
+
+  unreserved_keyword
+  col_name_keyword
+  bare_label_keyword
+  type_func_name_keyword
+  reserved_keyword
+
+Local:
+
+  SCONST
+  Sconst
+  NonReservedWord
+  opt_boolean_or_string
+  NonReservedWord_or_Sconst
+  ColLabel
+  BareColLabel
+  comment_text
+  notify_payload
+  RoleSpec
+  RoleId
+  ColId
+  var_name
+  type_func_name_keyword
+  type_function_name
+  param_name
+  attr_name
+  name
+  cursor_name
+  file_name
+  Op    // Op comes from yytext. It is in heap. 
+  generic_option_name
+  analyze_keyword
+  ICONST   <ival>
+  IDENT
+  BCONST
+  XCONST
+  SCONST
+  USCONST
+  UIDENT
+  Op
+  FCONST

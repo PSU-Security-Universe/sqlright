@@ -1,0 +1,14 @@
+drop table if exists t1;
+set @org_mode=@@sql_mode;
+create table t1 ( `a` tinyint(4) NOT NULL auto_increment, primary key (`a`) ) engine = 'InnoDB'  ;
+set @@sql_mode='strict_all_tables';
+insert into t1 values(1000);
+select count(*) from t1;
+set auto_increment_increment=1000;
+set auto_increment_offset=700;
+insert into t1 values(null);
+select count(*) from t1;
+set @@sql_mode=@org_mode;
+insert ignore into t1 values(null);
+select * from t1;
+drop table t1;

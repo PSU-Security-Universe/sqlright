@@ -1,0 +1,14 @@
+INSTALL PLUGIN test_security_context SONAME 'test_security_context.so';
+SELECT PLUGIN_STATUS FROM INFORMATION_SCHEMA.PLUGINS WHERE PLUGIN_NAME='test_security_context';
+SELECT "OK";
+SELECT "FAIL";
+SET @@test_security_context_get_field = "host", @@test_security_context_get_value = "localhost";
+SELECT "OK";
+SET @@test_security_context_get_field = "ip";
+SELECT "OK";
+SELECT "OK";
+SET @@test_security_context_get_field = "priv_host", @@test_security_context_get_value = "localhost";
+SELECT "OK";
+SET @@test_security_context_get_field = "sec_ctx_test";
+SELECT "OK";
+UNINSTALL PLUGIN test_security_context;

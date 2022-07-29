@@ -1,0 +1,10 @@
+CREATE TABLE v0 ( v2 INT, v1 INT );
+INSERT INTO v0 VALUES ( 1, 10 );
+INSERT INTO v0 VALUES ( 1, 0 );
+INSERT INTO v0 VALUES ( 10, 10 );
+INSERT INTO v0 VALUES ( 10, 0 );
+CREATE INDEX v3 ON v0 ( v2, v1 );
+
+SELECT * FROM v0 WHERE ( v2 IN ( SELECT v2 FROM v0 ORDER BY max ( nth_value ( v1, 10 ) OVER( ), COUNT () ) ) );
+SELECT (v2 IN ( SELECT v2 FROM v0 ORDER BY max ( nth_value ( v1, 10 ) OVER( ), COUNT ( ) ) )) FROM v0;
+SELECT v2 FROM v0 ORDER BY max ( nth_value ( v1, 10 ) OVER( ), COUNT () );

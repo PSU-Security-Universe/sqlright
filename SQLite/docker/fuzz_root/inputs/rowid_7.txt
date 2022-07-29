@@ -1,0 +1,14 @@
+CREATE TABLE t45(a PRIMARY KEY, b, c) WITHOUT ROWID;
+CREATE INDEX i45 ON t45(b);
+INSERT INTO t45 VALUES(2, 'one', 'x');
+INSERT INTO t45 VALUES(4, 'one', 'x');
+INSERT INTO t45 VALUES(6, 'one', 'x');
+INSERT INTO t45 VALUES(8, 'one', 'x');
+INSERT INTO t45 VALUES(10, 'one', 'x');
+INSERT INTO t45 VALUES(1, 'two', 'x');
+INSERT INTO t45 VALUES(3, 'two', 'x');
+INSERT INTO t45 VALUES(5, 'two', 'x');
+INSERT INTO t45 VALUES(7, 'two', 'x');
+INSERT INTO t45 VALUES(9, 'two', 'x');
+SELECT * FROM t45 WHERE b=? AND a>?;
+SELECT * FROM t45 WHERE b='one' AND a<8;

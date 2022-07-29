@@ -1,0 +1,4 @@
+CREATE TABLE v0 ( v1 INT , v2 INT ) ;
+insert into v0(v1, v2) values(1, 2);
+insert into v0(v1) values(10),(20);
+select v1, v2 from v0;

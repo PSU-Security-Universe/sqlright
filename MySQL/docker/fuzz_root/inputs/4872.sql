@@ -1,0 +1,7 @@
+SET NAMES utf8;
+CREATE TABLE t(i INT, j INT);
+INSERT INTO t VALUES (1,1), (1,4), (1,2), (1,4);
+ANALYZE TABLE t;
+SHOW CREATE VIEW v;
+TRUNCATE TABLE t;
+SET SESSION windowing_use_high_precision=FALSE;

@@ -1,0 +1,11 @@
+USE test;
+RESET MASTER;
+RESET REPLICA ALL FOR CHANNEL '';
+USE test;
+RESET MASTER;
+RESET REPLICA ALL FOR CHANNEL '';
+START REPLICA ;
+STOP REPLICA ;
+SELECT asynchronous_connection_failover_reset();
+SELECT asynchronous_connection_failover_reset();
+KILL 47;

@@ -1,0 +1,11 @@
+INSTALL COMPONENT 'file://component_query_attributes';
+SELECT mysql_query_attribute_string('a');
+SELECT mysql_query_attribute_string('a');
+SELECT mysql_query_attribute_string('a');
+SELECT mysql_query_attribute_string('a'), mysql_query_attribute_string('c');
+SELECT mysql_query_attribute_string('a');
+SELECT mysql_query_attribute_string('');
+SELECT mysql_query_attribute_string('a');
+SELECT mysql_query_attribute_string('a'),  mysql_query_attribute_string('c');
+SELECT mysql_query_attribute_string('a');
+UNINSTALL COMPONENT 'file://component_query_attributes';

@@ -1,0 +1,14 @@
+SET @previous_binlog_format__htnt542nh=@@GLOBAL.binlog_format;
+SET @@GLOBAL.binlog_format=STATEMENT;
+SET binlog_format=STATEMENT;
+create table t1 (a varchar(50));
+reset master;
+SET TIMESTAMP=10000;
+SET @`a b`='hello';
+INSERT INTO t1 VALUES(@`a b`);
+set @var1= "';aaa";
+SET @var2=char(ascii('a'));
+insert into t1 values (@var1),(@var2);
+flush logs;
+drop table t1;
+SET @@GLOBAL.binlog_format=@previous_binlog_format__htnt542nh;

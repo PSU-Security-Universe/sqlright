@@ -1,0 +1,6 @@
+CREATE TABLE t1(a,b,c);
+INSERT INTO t1(a,b,c) VALUES('In_the_beginning_was_the_Word',1,1),('and_the_Word_was_with_God',1,2), ('and_the_Word_was_God',1,3), ('The_same_was_in_the_beginning_with_God',2,1), ('All_things_were_made_by_him',3,1), ('and_without_him_was_not_any_thing_made_that_was_made',3,2);
+CREATE INDEX t1a1 ON t1(substr(a,1,12));
+SELECT b, c, '|' FROM t1 WHERE substr(a,1,12)=='and_the_Word' ORDER BY b, c;
+SELECT c FROM t1 WHERE b=1 AND substr(a,2,3)='nd_' ORDER BY c;
+SELECT rowid, b, c FROM t1 WHERE substr(a,27,3)=='ord' AND d>=29;

@@ -1,0 +1,10 @@
+CREATE USER 'kristofer' IDENTIFIED BY 'secret';
+DROP USER 'kristofer';
+CREATE USER 'kristofer'@'localhost' IDENTIFIED BY 'secret2';
+SHOW GRANTS FOR 'kristofer'@'localhost';
+DROP USER 'kristofer'@'localhost';
+CREATE USER 'kristofer'@'localhost' IDENTIFIED BY '123';
+SHOW GRANTS FOR 'kristofer'@'localhost';
+DROP USER 'kristofer'@'localhost';
+CREATE USER 'kristofer'@'33.33.33.33' IDENTIFIED BY '123';
+DROP USER 'kristofer'@'33.33.33.33';

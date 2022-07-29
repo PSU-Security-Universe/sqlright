@@ -1,0 +1,10 @@
+CREATE TABLE t1 ( id INT NOT NULL, name VARCHAR(255), department VARCHAR(10), country VARCHAR(255) ) PARTITION BY LIST COLUMNS (department, country) ( PARTITION first_office VALUES IN (('dep1', 'Russia'), ('dep1', 'Croatia')), PARTITION second_office VALUES IN (('dep2', 'Russia')) );
+INSERT INTO t1 VALUES(1, 'Ann', 'dep1', 'Russia');
+SHOW CREATE TABLE t1;
+create table t1 (a int, b int) partition by range columns (a,b) ( partition p0 values less than (maxvalue, 10), partition p1 values less than (maxvalue, maxvalue));
+insert into t1 values (0x00410000);
+analyze table t1;
+alter table t1 remove partitioning;
+set names latin1;
+show create table t1;
+set @@sql_mode=allow_invalid_dates;

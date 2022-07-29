@@ -1,0 +1,8 @@
+CREATE TABLE t2(x);
+INSERT INTO t2 VALUES('.ABC');
+INSERT INTO t2 VALUES('.abcd');
+INSERT INTO t2 VALUES('.defg');
+INSERT INTO t2 VALUES('.DEF');
+SELECT x FROM t2 ORDER BY substr(x, 2) COLLATE nocase;
+CREATE INDEX i2 ON t2( substr(x, 2) );
+SELECT x FROM t2 ORDER BY substr(x, 2) COLLATE nocase;

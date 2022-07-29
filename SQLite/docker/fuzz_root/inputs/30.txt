@@ -1,0 +1,10 @@
+CREATE TABLE t1(col1 TEXT PRIMARY KEY);
+INSERT INTO t1(col1) values('a');
+INSERT INTO t1(col1) values('b');
+INSERT INTO t1(col1) values('c');
+CREATE TABLE t2(col1 TEXT PRIMARY KEY);
+INSERT INTO t2(col1) values('a');
+INSERT INTO t2(col1) values('b');
+INSERT INTO t2(col1) values('c');
+SELECT COUNT ( * ) FROM t1 LEFT OUTER JOIN t2 ON t1.col1 = t2.col1 WHERE t2.col1 IS NULL;
+SELECT COUNT ( * ) FROM t2 LEFT JOIN t4.b1 LEFT JOIN t4.b2 ON b2.x=b1.x AND b2.y IN (b1.y);

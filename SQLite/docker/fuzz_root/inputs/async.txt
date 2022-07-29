@@ -1,0 +1,8 @@
+CREATE TABLE counter(c);
+INSERT INTO counter(c) VALUES (1);
+UPDATE counter SET c = 2;
+CREATE TABLE t1(a PRIMARY KEY, b, c);
+CREATE TABLE t2(a PRIMARY KEY, b, c);
+UPDATE counter SET c = 3;
+INSERT INTO t1 VALUES('abcdefghij', 'four', 'score');
+INSERT INTO t2 VALUES('klmnopqrst', 'and', 'seven');

@@ -1,0 +1,4 @@
+CREATE USER user1;
+CREATE USER user3@%;
+CREATE USER "user2"@'%';
+SELECT USER();

@@ -1,0 +1,16 @@
+create table t1 (c int primary key) engine=innodb;
+create table t2 (c int) engine=myisam;
+create table t3 (c int) engine=myisam;
+insert into t1 (c) values (1);
+create trigger trg_bug26141_ai after insert on t1 for each row begin insert into t2 (c) values (1); # We need the 'sync' lock to synchronously wait in connection 2 till  # the moment when the trigger acquired all the locks. select release_lock("lock_bug26141_sync") into @a; # 1000 is time in seconds of lock wait timeout -- this is a way # to cause a manageable sleep up to 1000 seconds select get_lock("lock_bug26141_wait", 1000) into @a; end;
+select get_lock("lock_bug26141_wait", 0);
+select get_lock("lock_bug26141_sync", /* must not be priorly locked */ 0);
+insert into t1 (c) values (2);
+select get_lock("lock_bug26141_sync", 1000);
+update t1 set c=3 where c=1;
+select release_lock("lock_bug26141_sync");
+select release_lock("lock_bug26141_wait");
+select * from t1;
+select * from t2;
+select * from t3;
+drop table t1, t2, t3;

@@ -1,0 +1,8 @@
+CREATE TABLE t3(a, b, c PRIMARY KEY, d PRIMARY KEY) WITHOUT ROWID;
+INSERT INTO t3 VALUES('f', 1, 1, 'o');
+INSERT INTO t3 VALUES('o', 2, 1, 't');
+INSERT INTO t3 VALUES('t', 1, 2, 't');
+INSERT INTO t3 VALUES('t', 2, 2, 'f');
+CREATE INDEX t3i1 ON t3(d);
+CREATE INDEX t3i2 ON t3(a);
+SELECT c||'.'||b FROM t3 WHERE a='t' OR d='t';

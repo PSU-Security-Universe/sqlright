@@ -1,0 +1,12 @@
+SET NAMES gb18030;
+SET CHARACTER_SET_DATABASE = gb18030;
+CREATE DATABASE `����`;
+USE `���ݿ�`;
+USE test;
+DESC `����`;
+SHOW CREATE TABLE `����`;
+INSERT INTO `����` VALUES ('һ�����ĕ2�8'), ('���߰˾�ʮ'), ('�9�4�9�5�9�6�9�7�9�8'), ('�2�6�2�8�0�5�5�2�5�0');
+ALTER TABLE `����` ADD `���ֶ�һ` CHAR(1) FIRST;
+UPDATE `��һ` SET `�ֶ�һ` = ('���������2�8');
+DELETE FROM `��һ` WHERE `�ֶ�һ` = '���5�3���5�2��';
+TRUNCATE `����`;

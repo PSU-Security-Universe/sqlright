@@ -1,0 +1,16 @@
+create table gin_test_tbl(i int4[]) with (autovacuum_enabled = off);
+create index gin_test_idx on gin_test_tbl using gin (i)  with (fastupdate = on, gin_pending_list_limit = 4096);
+insert into gin_test_tbl select array[1, 2, g] from generate_series(1, 20000) g;
+insert into gin_test_tbl select array[1, 3, g] from generate_series(1, 1000) g;
+select gin_clean_pending_list('gin_test_idx')>10 as many;
+vacuum gin_test_tbl;
+vacuum gin_test_tbl;
+alter index gin_test_idx set (fastupdate = off);
+insert into gin_test_tbl select array[1, 2, g] from generate_series(1, 1000) g;
+insert into gin_test_tbl select array[1, 3, g] from generate_series(1, 1000) g;
+delete from gin_test_tbl where i @> array[2];
+vacuum gin_test_tbl;
+explain (costs off)select count(*) from gin_test_tbl where i @> array[1, 999];
+select count(*) from gin_test_tbl where i @> array[1, 999];
+set gin_fuzzy_search_limit = 1000;
+explain (costs off)select count(*) > 0 as ok from gin_test_tbl where i @> array[1];

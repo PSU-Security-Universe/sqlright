@@ -1,0 +1,5 @@
+SELECT group_replication_disable_member_action("mysql_disable_super_read_only_if_primary", "AFTER_PRIMARY_ELECTION");
+SELECT group_replication_enable_member_action("mysql_disable_super_read_only_if_primary", "AFTER_PRIMARY_ELECTION");
+SELECT group_replication_reset_member_actions();
+SELECT * FROM performance_schema.replication_group_member_actions;
+SELECT * FROM performance_schema.replication_group_configuration_version;

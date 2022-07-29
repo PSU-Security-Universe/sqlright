@@ -1,0 +1,15 @@
+SHOW VARIABLES LIKE 'disconnect_on_expired_password';
+CREATE USER 'bernt';
+ALTER USER 'bernt' IDENTIFIED BY 'secret';
+ALTER USER 'bernt' PASSWORD EXPIRE;
+DROP USER 'bernt';
+CREATE USER 'bernt';
+ALTER USER 'bernt' IDENTIFIED BY 'secret';
+ALTER USER 'bernt' PASSWORD EXPIRE;
+SELECT 1;
+DROP USER 'bernt';
+CREATE USER 'bernt';
+ALTER USER 'bernt' IDENTIFIED BY 'secret';
+GRANT ALL ON *.* TO 'bernt' WITH GRANT OPTION;
+ALTER USER 'bernt' PASSWORD EXPIRE;
+DROP USER 'bernt';

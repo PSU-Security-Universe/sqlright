@@ -1,0 +1,5 @@
+DROP TABLE t1;
+CREATE TABLE t1(a PRIMARY KEY, b UNIQUE COLLATE nocase, c, d, e);
+CREATE INDEX t1c ON t1('c');
+CREATE INDEX t1d ON t1('d' COLLATE binary ASC);
+WITH RECURSIVE c(x) AS (VALUES(1) UNION SELECT x+1 FROM c WHERE x<30) INSERT INTO t1(a,b,c,d,e) SELECT x, printf('ab%03xxy',x), x, x, x FROM c;

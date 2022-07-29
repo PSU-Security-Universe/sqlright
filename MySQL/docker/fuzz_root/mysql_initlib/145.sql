@@ -1,0 +1,9 @@
+INSTALL COMPONENT "file://component_test_system_variable_source";
+UNINSTALL COMPONENT "file://component_test_system_variable_source";
+INSTALL COMPONENT "file://component_test_system_variable_source";
+UNINSTALL COMPONENT "file://component_test_system_variable_source";
+SET GLOBAL innodb_buffer_pool_size=134217728;
+INSTALL COMPONENT "file://component_test_system_variable_source";
+UNINSTALL COMPONENT "file://component_test_system_variable_source";
+INSTALL COMPONENT "file://component_test_system_variable_source";
+UNINSTALL COMPONENT "file://component_test_system_variable_source";

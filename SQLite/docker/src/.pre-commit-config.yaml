@@ -1,0 +1,27 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+-   repo: https://hub.fastgit.org/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+    -   id: check-byte-order-marker
+    -   id: check-case-conflict
+    -   id: check-merge-conflict
+    -   id: check-symlinks
+    -   id: check-yaml
+    -   id: end-of-file-fixer
+    -   id: mixed-line-ending
+    -   id: trailing-whitespace
+-   repo: https://hub.fastgit.org/psf/black
+    rev: 21.6b0
+    hooks:
+    -   id: black
+-   repo: local
+    hooks:
+    -   id: clang-format
+        name: clang-format
+        description: Format C code using clang-format.
+        language: system
+        files: \.(c|cc|cxx|cpp|h|hpp|hxx)$
+        entry: clang-format -i
+        # args: [""]

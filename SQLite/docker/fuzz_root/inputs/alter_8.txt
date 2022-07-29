@@ -1,0 +1,15 @@
+CREATE TABLE a1(x INTEGER, y TEXT, z BLOB, PRIMARY KEY(x));
+CREATE TABLE a2(a, b, c);
+CREATE VIEW v1 AS SELECT x, y, z FROM a1;
+ALTER TABLE a1 RENAME y TO yyy;
+SELECT sql FROM sqlite_master WHERE type='view';
+DROP VIEW v1;
+  CREATE VIEW v2 AS SELECT x, x+x, a, a+a FROM a1, a2;
+  ALTER TABLE a1 RENAME x TO xxx;
+  SELECT sql FROM sqlite_master WHERE type='view';
+  DROP TABLE a2;
+  DROP VIEW v2;
+  CREATE TABLE a2(a INTEGER PRIMARY KEY, b, c);
+  CREATE VIEW v2 AS SELECT xxx, xxx+xxx, a, a+a FROM a1, a2;
+  ALTER TABLE a1 RENAME xxx TO x;
+  SELECT sql FROM sqlite_master WHERE type='view';

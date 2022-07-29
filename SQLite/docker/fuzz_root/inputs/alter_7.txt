@@ -1,0 +1,3 @@
+CREATE TABLE blob(rid INTEGER PRIMARY KEY, rcvid INTEGER, size INTEGER, uuid TEXT UNIQUE NOT NULL, content BLOB, CHECK( length(uuid)>=40 AND rid>0 ));
+ALTER TABLE "blob" RENAME COLUMN "rid" TO "a1";
+SELECT "where" FROM blob;

@@ -1,0 +1,18 @@
+CREATE TABLE t1 (a int AUTO_INCREMENT KEY, b char(30)) ENGINE archive DATA DIRECTORY = '/data/yu/Squirrel_DBMS_Fuzzing/MySQL_source/mysql-server-inst/bld/mysql-test/var/tmp/archive' INDEX DIRECTORY = '/data/yu/Squirrel_DBMS_Fuzzing/MySQL_source/mysql-server-inst/bld/mysql-test/var/tmp/archive';
+CREATE TABLE t1 (a int AUTO_INCREMENT KEY, b char(30)) ENGINE archive DATA DIRECTORY = '/data/yu/Squirrel_DBMS_Fuzzing/MySQL_source/mysql-server-inst/bld/mysql-test/var/tmp/archive' INDEX DIRECTORY = '/data/yu/Squirrel_DBMS_Fuzzing/MySQL_source/mysql-server-inst/bld/mysql-test/var/tmp/archive';
+INSERT INTO t1 VALUES (NULL, "blue");
+INSERT INTO t1 VALUES (NULL, "red");
+INSERT INTO t1 VALUES (NULL, "yellow");
+SHOW CREATE TABLE t1;
+DROP TABLE t1;
+SET @org_mode=@@sql_mode;
+SET @@sql_mode='NO_DIR_IN_CREATE';
+SELECT @@sql_mode;
+CREATE TABLE t1 (a int AUTO_INCREMENT KEY, b char(30)) ENGINE archive DATA DIRECTORY = '/data/yu/Squirrel_DBMS_Fuzzing/MySQL_source/mysql-server-inst/bld/mysql-test/var/tmp/archive';
+INSERT INTO t1 VALUES (NULL, "blue");
+INSERT INTO t1 VALUES (NULL, "red");
+INSERT INTO t1 VALUES (NULL, "yellow");
+DROP TABLE t1;
+set @@sql_mode=@org_mode;
+CREATE TABLE t1 (a int AUTO_INCREMENT KEY, b char(30)) ENGINE archive DATA DIRECTORY '/data/yu/Squirrel_DBMS_Fuzzing/MySQL_source/mysql-server-inst/bld/mysql-test/var/mysqld.1/data//test';
+CREATE TABLE t1 (c1 int(10), PRIMARY KEY (c1)) ENGINE archive INDEX DIRECTORY '/data/yu/Squirrel_DBMS_Fuzzing/MySQL_source/mysql-server-inst/bld/mysql-test/var/mysqld.1/data//test';

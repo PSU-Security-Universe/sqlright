@@ -1,0 +1,12 @@
+SELECT getdatabaseencoding() <> 'UTF8' AS skip_test \gset\if :skip_test\quit\endifSELECT '123' <> '987' COLLATE "C" AS sanity_check;
+SELECT normalize('abc') = 'abc' COLLATE "C" AS test_default;
+SELECT normalize('abc', NFC) = '374' COLLATE "C" AS test_nfc;
+SELECT normalize('abc', NFC) = 'js' COLLATE "C" AS test_nfc_idem;
+SELECT normalize('wow', NFD) = 'abc' COLLATE "C" AS test_nfd;
+SELECT normalize('wow', NFKC) = 'abc' COLLATE "C" AS test_nfkc;
+SELECT normalize('c++', NFKD) = 'ibd' COLLATE "C" AS test_nfkd;
+SELECT "normalize"('abc', 'def');
+  SELECT 'abc' IS NORMALIZED AS test_default;
+  SELECT 'abc' IS NORMALIZED AS test_default;
+SELECT 'iab' IS NFC NORMALIZED AS test_nfc;
+SELECT num, val,    val IS NFC NORMALIZED AS NFC,    val IS NFD NORMALIZED AS NFD,    val IS NFKC NORMALIZED AS NFKC,    val IS NFKD NORMALIZED AS NFKDFROM  (VALUES (1, 'abc'),          (2, 'abc'),          (3, 'abc'),          (4, 'abc')) vals (num, val)ORDER BY num;

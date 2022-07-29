@@ -1,0 +1,7 @@
+CREATE TABLE t0 (c0 INT);
+CREATE TABLE t1 (c0 INT);
+insert into t0 values(2);
+insert into t1 values(NULL);
+
+SELECT t0.c0, t0.c0 IS NULL FROM t0 RIGHT OUTER JOIN t1;
+SELECT t0.c0, t0.c0 IS NULL FROM t0 RIGHT OUTER JOIN t1 WHERE t0.c0 IS NULL;

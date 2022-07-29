@@ -1,0 +1,10 @@
+create table thread_to_monitor(thread_id int);
+insert into thread_to_monitor(thread_id) SELECT THREAD_ID FROM performance_schema.threads WHERE PROCESSLIST_ID=CONNECTION_ID();
+CREATE TABLE t1 (a int) ENGINE = InnoDB PARTITION BY HASH (a) PARTITIONS 2;
+INSERT INTO t1 VALUES (0), (1), (2), (3);
+SHOW CREATE VIEW v1;
+FLUSH STATUS;
+SET @old_default_storage_engine = @@default_storage_engine;
+LOCK TABLE t1 WRITE;
+UNLOCK TABLES;
+ANALYZE TABLE t1;
