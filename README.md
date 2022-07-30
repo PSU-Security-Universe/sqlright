@@ -19,8 +19,6 @@ The overview of `SQLRight` is illustrated by the diagram below.
 <img src="doc/sqlright-overview.jpg" width="90%" alt="The overview of SQLRight" border="1">
 </p>
 
-<br/><br/>
-
 ## Installation & Run
 
 The Installation and Run instructions can be found in this [link](doc/install_n_run_steps.md).
@@ -37,7 +35,7 @@ The Installation and Run instructions can be found in this [link](doc/install_n_
 Detecting Logical Bugs of DBMS with Coverage-based Guidance
 
 @inproceedings{liang:sqlright,
-  title        = {{Detecting Logical Bugs of DBMS with Coverage-based Guidance (To Appear)}},
+  title        = {{Detecting Logical Bugs of DBMS with Coverage-based Guidance}},
   author       = {Yu Liang and Song Liu and Hong Hu},
   booktitle    = {Proceedings of the 31st USENIX Security Symposium (USENIX 2022)},
   month        = {aug},
