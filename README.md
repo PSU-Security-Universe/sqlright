@@ -19,9 +19,15 @@ The overview of `SQLRight` is illustrated by the diagram below.
 <img src="doc/sqlright-overview.jpg" width="90%" alt="The overview of SQLRight" border="1">
 </p>
 
-## Installation & Run
+## Use SQLRight
 
-The Installation and Run instructions can be found in this [link](doc/install_n_run_steps.md).
+- [Environment Setup](PREREQUISITE.md)
+- [Get Docker Images](INSTALL.md)
+- [Run Fuzzing](RUN.md)
+
+## Add New Oracles
+
+- [Develop New Oracles](DEVELOPMENT.md)
 
 ## Authors
 
