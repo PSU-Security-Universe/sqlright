@@ -131,8 +131,7 @@ The pre-built `MySQL` binaries should be placed in directory `<sqlright_root>/My
 `MySQL` pre-built binaries can be found in the `sqlright_mysql_bisecting` docker (available in `Docker Hub`). 
 
 
-
-
+------------------------------------
 ### Teste MySQL with TLP
 
 To start fuzzing
