@@ -1,22 +1,12 @@
 #!/bin/bash -e
 cd "$(dirname "$0")"/../bisecting/bisecting
 
-#if [ ! -f "mysql_binary_zip.zip" ]; then 
-#    cat ./mysql_binary_zip/mysql_binary_zip.zip* > ./mysql_binary_zip.zip
-#    for i in $(seq 1 59);
-#    do
-#        if [[ "$i" -lt "10" ]]
-#        then
-#            command="cat ./mysql_binary_zip/mysql_binary_zip.zip.00$i"" > ./mysql_binary_zip.zip "
-#            echo "Running command: $command"
-#            bash -c "$command"
-#        else
-#            command="cat ./mysql_binary_zip/mysql_binary_zip.zip.0$i"" > ./mysql_binary_zip.zip "
-#            echo "Running command: $command"
-#            bash -c "$command"
-#        fi
-#    done
-#fi
+if [ ! -e ./mysql_binary_zip/mysql_binary.zip.001 ]; then
+    
+    echo "Error: The MySQL cached binaries not existed. Please download the MySQL cached binaries from the DockerHub: steveleungsly/sqlright_mysql_bisecting:version1.0. And place the binaries in the <sqlright_root>/MySQL/bisecting/bisecting/mysql_binary_zip folder. "
+    echo "Aborted Docker build due to MySQL binary missing. "
+    exit 1
+fi
 
 ## For debug purpose, keep all intermediate steps to fast reproduce the run results.
 #sudo docker build --rm=false -f ./Dockerfile -t sqlright_mysql_bisecting .  
