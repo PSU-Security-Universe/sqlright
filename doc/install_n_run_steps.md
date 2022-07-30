@@ -2,15 +2,12 @@
 
 ## 0. Prerequisites
 
-* Update the CPU setting for the best fuzzing performance (necessary for every system reboot).
+* Update the CPU settings for the best fuzzing performance (necessary for every system reboot).
 
 ```bash
-# System Configurations. 
-# Open the terminal app from the host system.
 # Disable On-demand CPU scaling
 cd /sys/devices/system/cpu
 echo performance | sudo tee cpu*/cpufreq/scaling_governor
-
 # Avoid having crashes being misinterpreted as hangs
 sudo sh -c " echo core >/proc/sys/kernel/core_pattern "
 ```
@@ -54,13 +51,11 @@ Running `SQLRight` inside a virtual machine may lead to unexpected errors, and t
     - check CPU settings: `Disable On-demand CPU scaling` and `Avoid having crashes being misinterpreted as hangs`
     - make sure `--start-core` + `--num-concurrent` won't exceed the available CPU cores. (very common mistake)
 
-## 1.  Build the Docker Images
+## 1. Get Docker Images
 
-There are two ways to build the `Docker` Images for `SQLRight` fuzzing. The first way is to download the pre-built `Docker` images from `Docker Hub`. The detailed instructions are illustrated in `Section 1.1`. The second way is to build the `Docker` image from source `Dockerfile`. The steps are showed in `Section 1.2`.
+You can take two ways to prepare the docker images for `SQLRight`: download the pre-built images from `Docker Hub`, or build the image from source `Dockerfile`.
 
-### 1.1 Download pre-built `SQLRight` `Docker` images from `Docker Hub`
-
-Here is the commands to download `SQLRight` images:
+### Download Pre-built Docker Images
 
 ```bash
 # For SQLite3 fuzzing and bisecting
@@ -76,57 +71,39 @@ sudo docker pull steveleungsly/sqlright_mysql:version1.0
 sudo docker pull steveleungsly/sqlright_mysql_bisecting:version1.0
 ```
 
-### 1.2 Build `SQLRight` from `Dockerfile`
+### Build Dockers Locally
 
---------------------------------------------------------------------------
-#### 1.2.1  Build the Docker Image for SQLite3 fuzzing
+* Docker for testing SQLite3  (may take 1 hour or longer)
 
-(Optional) If you want to run `SQLite` bug bisecting, please download all the contents from [Google Drive Shared Link](https://drive.google.com/drive/folders/1zDvLf93MJbtGXByzDXZ-CbfNPAd3wUGJ?usp=sharing), and place the downloaded contents to the following `SQLRight` repo location. 
+To run `SQLite` bug bisecting, download pre-built SQLite3 binaries from [Google Drive Shared Link](https://drive.google.com/drive/folders/1zDvLf93MJbtGXByzDXZ-CbfNPAd3wUGJ?usp=sharing), and place the contents to foder `<sqlright_root>/SQLite/docker/sqlite_bisecting_binary_zip`
 
-```bash
-<sqlright_root>/SQLite/docker/sqlite_bisecting_binary_zip
-```
-
-Execute the following command before running any SQLite3 related fuzzing. 
-
-The Docker build process can last for about `1` hour. Expect long runtime when executing this command. 
 ```bash
 cd <sqlright_root>/SQLite/scripts/
 bash setup_sqlite.sh
+# will create a docker called "sqlright_sqlite"
 ```
 
-After the command finished, a Docker Image named `sqlright_sqlite` is created. 
+* Docker for testing PostgreSQL (may take 1 hour or longer)
 
---------------------------------------------------------------------------
-#### 1.2.2  Build the Docker Image for PostgreSQL fuzzing
-
-Execute the following command before running any PostgreSQL related fuzzing. 
-
-The Docker build process can last for about `1` hour. Expect long runtime when executing this command. 
 ```bash
 cd <sqlright_root>/PostgreSQL/scripts/
 bash setup_postgres.sh
+# will create a docker file "sqlright_postgres"
 ```
 
-After the command finished, a Docker Image named `sqlright_postgres` is created. 
+* Docker for testing MySQL (may take 3 hour or longer. Warnnings expected) 
 
---------------------------------------------------------------------------
-#### 1.2.3  Build the Docker Images for MySQL evaluations
-
-Execute the following command before running any MySQL related fuzzing. 
-
-The Docker build process can last for about `3` hour. Expect long runtime when executing the command.
-
-We expect some **Warnings** returned from the MySQL compilation process. These **Warnings** won't impact the build process. 
 
 ```bash
 cd <sqlright_root>/MySQL/scripts/
 bash setup_mysql.sh
+# will create a docker file "sqlright_mysql"
 ```
 
-After the command finished, the Docker image named `sqlright_mysql` is created. 
+* Docker for bisecting MySQL bug repors
 
-**Warning** Due to the large binary size from the pre-compiled versions of `MySQL`, we do not include the steps to build the `sqlright_mysql_bisecting` docker image. To run bisecting for the detected bugs from the `MySQL` DBMS, please pull the `sqlright_mysql_bisecting` image from the `Docker Hub`. More detailed instructions are shown in `Section 1.1`. 
+Due to the large size of the pre-compiled binaries, we exclude the steps to build the `sqlright_mysql_bisecting` docker. To bisect `MySQL` bug reports, pull the `sqlright_mysql_bisecting` docker from the `Docker Hub`
+
 
 ## 2. Run SQLRight fuzzing
 
