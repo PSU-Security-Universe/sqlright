@@ -1,10 +1,10 @@
 # Installation and Run Instructions
 
-### Operating System configuration and Source Code setup
+## Operating System configuration and Source Code setup
 
-The `SQLRight` fuzzing tools are built inside the Docker hosted environment. We have evaluated the `SQLRight` code, using `Ubuntu 20.04` as host system, with Docker version `>= 20.10.16`. The following scripts will setup some operating system settings that are required for `SQLRight` to run. 
+`SQLRight` is built using Dockers. We have evaluated `SQLRight` on `Ubuntu 20.04` with Docker version `>= 20.10.16`. The following scripts will setup necessary environmetns for `SQLRight` to run. 
 
-**Warning**: If you are running your "host" system inside an Virtual Machine, i.e., VMware Workstation, VMware Fusion, VirtualBox, Parallel Desktop etc, the `Disable On-demand CPU scaling` step in the following script could fail. User can continue running `SQLRight` even if this specific setup step fails on their machine. But we generally don't recommend to run the `SQLRight` Docker environment inside any Virtual Machines, it could cause some unexpected errors. Check [Host system in VM](#host-system-in-vm) for more details. 
+**Warning**: If you run Dockers inside an Virtual Machine, like VMware, the `Disable On-demand CPU scaling` step could fail. You can continue running `SQLRight` in this case, but we generally don't recommend this setup as it could lead to unexpected errors. Check [Host system in VM](#host-system-in-vm) for more details. 
 
 ```bash
 # System Configurations. 
