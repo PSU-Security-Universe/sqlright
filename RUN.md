@@ -29,7 +29,32 @@ bash run_sqlite_bisecting.sh SQLRight --oracle NOREC
 ```
 
 - The bisecting script will exit upon finished. 
-- Unique bug reports can be found in `<sqlright_root>/SQLite3/Results/sqlright_sqlite_NOREC_bugs/bug_samples/unique_bug_output/`.
+- Unique bug reports can be found in `<sqlright_root>/SQLite3/Results/sqlright_sqlite_NOREC_bugs/bug_samples/unique_bug_output/`
+
+---------------------------------------
+### Test SQLite with TLP
+
+To start fuzzing
+
+```bash
+cd <sqlright_root>/SQLite/scripts
+# Run the fuzzing with CPU core 1~5 (core id is 0-based). 
+# Please adjust the CORE ID based on your machine, 
+# and do not use conflict core id with other running evaluation process. 
+bash run_sqlite_fuzzing.sh SQLRight --start-core 0 --num-concurrent 5 --oracle TLP
+```
+
+To stop fuzzing
+
+```bash
+sudo docker stop sqlright_sqlite_TLP
+```
+
+To bisecting bug reports
+
+```
+bash run_sqlite_bisecting.sh SQLRight --oracle TLP
+```
 
 --------------------------------------------------------------------------
 ### Test PostgreSQL with NoREC
@@ -48,6 +73,27 @@ To stop fuzzing
 
 ```bash
 sudo docker stop sqlright_postgres_NOREC
+```
+
+- All the detected bugs are logged in `<sqlright_root>/PostgreSQL/Results/sqlright_postgres_NOREC_bugs/bug_samples/`
+
+--------------------------------------------------------------------------
+### Test PostgreSQL with TLP
+
+To start fuzzing
+
+```bash
+cd <sqlright_root>/PostgreSQL/scripts
+# Run the fuzzing with CPU core 1~5 (core id is 0-based). 
+# Please adjust the CORE ID based on your machine, 
+# and do not use conflict core id with other running evaluation process. 
+bash run_postgres_fuzzing.sh SQLRight --start-core 0 --num-concurrent 5 --oracle TLP
+```
+
+To stop fuzzing 
+
+```bash
+sudo docker stop sqlright_postgres_TLP
 ```
 
 - All the detected bugs are logged in `<sqlright_root>/PostgreSQL/Results/sqlright_postgres_NOREC_bugs/bug_samples/`
@@ -84,65 +130,12 @@ bash run_mysql_bisecting.sh SQLRight --oracle NOREC
 The pre-built `MySQL` binaries should be placed in directory `<sqlright_root>/MySQL/bisecting/bisecting/mysql_binary_zip`
 `MySQL` pre-built binaries can be found in the `sqlright_mysql_bisecting` docker (available in `Docker Hub`). 
 
----------------------------------------
-### SQLite TLP Oracle
-
-Run the following command. 
-
-The following bash scripts will wake the fuzzing script inside `sqlright_sqlite` Docker image, and start the `SQLRight` `SQLite3` fuzzing with `TLP` oracle. 
-
-```bash
-cd <sqlright_root>/SQLite/scripts
-# Run the fuzzing with CPU core 1~5 (core id is 0-based). 
-# Please adjust the CORE ID based on your machine, 
-# and do not use conflict core id with other running evaluation process. 
-bash run_sqlite_fuzzing.sh SQLRight --start-core 0 --num-concurrent 5 --oracle TLP
-```
-
-To stop the Docker container instance, run the following command.
 
 
-```bash
-# Stop the fuzzing process
-sudo docker stop sqlright_sqlite_TLP
-```
 
-Run the bug bisecting command. 
+### Teste MySQL with TLP
 
-```
-# Run bug bisecting
-bash run_sqlite_bisecting.sh SQLRight --oracle TLP
-```
-
---------------------------------------------------------------------------
-### PostgreSQL TLP Oracle
-
-Run the following command.
-
-The following bash scripts will wake the fuzzing script inside `sqlright_postgres` Docker image, and start the `SQLRight` `PostgreSQL` fuzzing with `TLP` oracle. 
-
-```bash
-cd <sqlright_root>/PostgreSQL/scripts
-# Run the fuzzing with CPU core 1~5 (core id is 0-based). 
-# Please adjust the CORE ID based on your machine, 
-# and do not use conflict core id with other running evaluation process. 
-bash run_postgres_fuzzing.sh SQLRight --start-core 0 --num-concurrent 5 --oracle TLP
-```
-
-To stop the Docker container instance. 
-
-```bash
-sudo docker stop sqlright_postgres_TLP
-```
-
-Since we did not find any bugs for PostgreSQL, we skip the bug bisecting process for PostgreSQL fuzzing. 
-
---------------------------------------------------------------------------
-### MySQL TLP Oracle
-
-Run the following command.
-
-The following bash scripts will wake the fuzzing script inside `sqlright_mysql` Docker image, and start the `SQLRight` `MySQL` fuzzing with `TLP` oracle. 
+To start fuzzing
 
 ```bash
 cd <sqlright_root>/MySQL/scripts
@@ -152,21 +145,20 @@ cd <sqlright_root>/MySQL/scripts
 bash run_mysql_fuzzing.sh SQLRight --start-core 0 --num-concurrent 5 --oracle TLP
 ```
 
-To stop the Docker container instance, run the following command. 
+To stop fuzzing 
 
 ```bash
-# Stop the fuzzing process
 sudo docker stop sqlright_mysql_TLP
 ```
 
-And then run the following bug bisecting command. 
+To bisect bug reports
 ```
-# Run bug bisecting
 bash run_mysql_bisecting.sh SQLRight --oracle TLP
 ```
 
-**WARNING** Due to the long compilation time for the `MySQL` DBMS, we are using pre-compiled and cached `MySQL` binaries to bisect the detect logical bugs. As time passes, the cached `MySQL` binaries can become out-of-date and the bisecting can thus become inaccurate. We recommend the developer to add in new `MySQL` versions, or re-compile the MySQL cached binaries in the future `MySQL` runs, in order to keep the bisecting results more accurate. The `MySQL` cached binaries zip files can be located in directory `<sqlright_root>/MySQL/bisecting/bisecting/mysql_binary_zip`. 
+- The bisecting process will exit upon finished. 
+- Unique bug reports can be found in `<sqlright_root>/MySQL/Results/sqlright_mysql_TLP_bugs/bug_samples/unique_bug_output`.
 
-**WARNING** Bisecting requires `sqlright_mysql_bisecting` docker image pulled from the `Docker Hub`. Please pull the Docker image using the instructions provided in `Section 1.1`. 
-
-The unique bug reports will be generated in `<sqlright_root>/MySQL/Results/sqlright_mysql_TLP_bugs/bug_samples/unique_bug_output`.
+**NOTE:** Due to the long compilation time of `MySQL`, we suggest to use pre-compiled binaries to help the bisecting.
+The pre-built `MySQL` binaries should be placed in directory `<sqlright_root>/MySQL/bisecting/bisecting/mysql_binary_zip`
+`MySQL` pre-built binaries can be found in the `sqlright_mysql_bisecting` docker (available in `Docker Hub`). 
