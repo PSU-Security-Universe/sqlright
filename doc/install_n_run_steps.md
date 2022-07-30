@@ -19,7 +19,7 @@ sudo sh -c " echo core >/proc/sys/kernel/core_pattern "
 
 **WARNING**: Since the operating system will automatically reset some settings upon restarts, we need to reset the system settings using the above scripts **EVERY TIME** the computer restarted. If the system settings are not being setup correctly, the `SQLRight` fuzzing processes inside Docker could failed. 
 
-The whole Artifact Evaluations are built within the `Docker` virtual environment. If the host system does not have the `Docker` application installed, here is the command to install `Docker` in `Ubuntu`. 
+The whole `SQLRight` code are built within the `Docker` virtual environment. If the host system does not have the `Docker` application installed, here is the command to install `Docker` in `Ubuntu`. 
 
 ```bash
 # The script is grabbed from Docker official documentation: https://docs.docker.com/engine/install/ubuntu/
@@ -56,7 +56,7 @@ By default, interacting with `Docker` requires the `root` privilege from the hos
 
 ### Host system in VM
 
-We generally don't recommend to run this Artifact Evaluation inside a Virtual Machine, e.g., VMware Workstation, VMware Fusion, VirtualBox, Parallel Desktop etc. However, if an VM is the only choice, make sure you check the following:
+We generally don't recommend to run this `SQLRight` inside a Virtual Machine, e.g., VMware Workstation, VMware Fusion, VirtualBox, Parallel Desktop etc. However, if an VM is the only choice, make sure you check the following:
 
 - Make sure when you call any fuzzing command in the instructions, the `--start-core + --num-concurrent` number won't exceed the total number of CPU cores you assigned to the Virtual Machine. 
 
