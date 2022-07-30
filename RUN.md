@@ -56,6 +56,8 @@ To bisecting bug reports
 bash run_sqlite_bisecting.sh SQLRight --oracle TLP
 ```
 
+- Unique bug reports can be found in `<sqlright_root>/SQLite3/Results/sqlright_sqlite_TLP_bugs/bug_samples/unique_bug_output/`
+
 --------------------------------------------------------------------------
 ### Test PostgreSQL with NoREC
 
@@ -132,7 +134,7 @@ The pre-built `MySQL` binaries should be placed in directory `<sqlright_root>/My
 
 
 ------------------------------------
-### Teste MySQL with TLP
+### Test MySQL with TLP
 
 To start fuzzing
 
