@@ -1,10 +1,8 @@
 # Installation and Run Instructions
 
-## Operating System configuration and Source Code setup
+## 0. Prerequisites
 
-`SQLRight` is built using Dockers. We have evaluated `SQLRight` on `Ubuntu 20.04` with Docker version `>= 20.10.16`. The following scripts will setup necessary environmetns for `SQLRight` to run. 
-
-**Warning**: If you run Dockers inside an Virtual Machine, like VMware, the `Disable On-demand CPU scaling` step could fail. You can continue running `SQLRight` in this case, but we generally don't recommend this setup as it could lead to unexpected errors. Check [Host system in VM](#host-system-in-vm) for more details. 
+* Update the CPU setting for the best fuzzing performance (necessary for every system reboot).
 
 ```bash
 # System Configurations. 
@@ -17,64 +15,45 @@ echo performance | sudo tee cpu*/cpufreq/scaling_governor
 sudo sh -c " echo core >/proc/sys/kernel/core_pattern "
 ```
 
-**WARNING**: Since the operating system will automatically reset some settings upon restarts, we need to reset the system settings using the above scripts **EVERY TIME** the computer restarted. If the system settings are not being setup correctly, the `SQLRight` fuzzing processes inside Docker could failed. 
-
-The whole `SQLRight` code are built within the `Docker` virtual environment. If the host system does not have the `Docker` application installed, here is the command to install `Docker` in `Ubuntu`. 
+* Install `Docker` in `Ubuntu` (Tested on `Ubuntu 20.04` with Docker version `>= 20.10.16`.)  
 
 ```bash
 # The script is grabbed from Docker official documentation: https://docs.docker.com/engine/install/ubuntu/
-
 sudo apt-get remove docker docker-engine docker.io containerd runc
-
 sudo apt-get update
-sudo apt-get install \
-    ca-certificates \
-    curl \
-    gnupg \
-    lsb-release
-    
+sudo apt-get install ca-certificates curl gnupg lsb-release
 sudo mkdir -p /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-
 # The next script could fail on some machines. However, the following installation process should still succeed. 
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
 sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
-
 # Receiving a GPG error when running apt-get update?
 # Your default umask may not be set correctly, causing the public key file for the repo to not be detected. Run the following command and then try to update your repo again: sudo chmod a+r /etc/apt/keyrings/docker.gpg.
-
 # To test the Docker installation. 
-sudo docker run hello-world
-# Expected outputs 'Hello from Docker!'
+sudo docker run hello-world # Expected outputs 'Hello from Docker!'
 ``` 
 
-By default, interacting with `Docker` requires the `root` privilege from the host system. For a normal (non-root) user, calling `docker` requires the `sudo` command prefix. 
+Interacting with `Docker` requires the `root` privilege. A non-root user should be a sudoer to use docker.
 
-### Host system in VM
+### Run docker inside VM
 
-We generally don't recommend to run this `SQLRight` inside a Virtual Machine, e.g., VMware Workstation, VMware Fusion, VirtualBox, Parallel Desktop etc. However, if an VM is the only choice, make sure you check the following:
-
-- Make sure when you call any fuzzing command in the instructions, the `--start-core + --num-concurrent` number won't exceed the total number of CPU cores you assigned to the Virtual Machine. 
-
-- If any of the `SQLRight` processes fail inside the system that is hosted by Virtual Machine, please consider to redo the `SQLRight` runs in a native (not virtual) environment. 
+Running `SQLRight` inside a virtual machine may lead to unexpected errors, and thus is not recommendated. If you have to do it, at least make sure `--start-core` + `--num-concurrent` won't exceed the total number of avaiable CPU cores in the VM.
 
 ### Troubleshooting
 
-- If the Docker image building process failed or stuck at some steps for a couple hours, consider to clean the Docker environment and rebuild the image. The following command will clean up the Docker cache, and we can rebuild another Docker image from scratch. 
+- the Docker image building process failed or stucked
+  
+  * clean the Docker environment via `sudo docker system prune --all`
+  * rebuild the image
 
-```bash
-sudo docker system prune --all
-```
+- Fuzzer failed to launch, immediately return errors, or never output any results while running:
 
-- If any fuzzing processes failed to launch, immediately return errors, or never output any results while running:
-    - Please check whether the `System Configuration` has been setup correctly. Specifically, please repeat the steps of `Disable On-demand CPU scaling` and `Avoid having crashes being misinterpreted as hangs` before retrying the fuzzing scripts. 
-    - Please check the `--start-core` and `--num-concurrent` flags you passed into the fuzzing command, and make sure `--start-core + --num-concurrent` won't exceed the total number of CPU cores you have on your machine. (This is a very common mistake that causes `SQLRight` failure. )
 
-<br/><br/>
+    - check CPU settings: `Disable On-demand CPU scaling` and `Avoid having crashes being misinterpreted as hangs`
+    - make sure `--start-core` + `--num-concurrent` won't exceed the available CPU cores. (very common mistake)
+
 ## 1.  Build the Docker Images
 
 There are two ways to build the `Docker` Images for `SQLRight` fuzzing. The first way is to download the pre-built `Docker` images from `Docker Hub`. The detailed instructions are illustrated in `Section 1.1`. The second way is to build the `Docker` image from source `Dockerfile`. The steps are showed in `Section 1.2`.
@@ -149,7 +128,6 @@ After the command finished, the Docker image named `sqlright_mysql` is created.
 
 **Warning** Due to the large binary size from the pre-compiled versions of `MySQL`, we do not include the steps to build the `sqlright_mysql_bisecting` docker image. To run bisecting for the detected bugs from the `MySQL` DBMS, please pull the `sqlright_mysql_bisecting` image from the `Docker Hub`. More detailed instructions are shown in `Section 1.1`. 
 
-<br/><br/>
 ## 2. Run SQLRight fuzzing
 
 ### 2.1 SQLite NoREC oracle
@@ -332,7 +310,6 @@ bash run_mysql_bisecting.sh SQLRight --oracle TLP
 
 The unique bug reports will be generated in `<sqlright_root>/MySQL/Results/sqlright_mysql_TLP_bugs/bug_samples/unique_bug_output`.
 
-<br/><br/>
 ## 3. SQLRight development
 
 ### 3.1 SQLRight code structure
