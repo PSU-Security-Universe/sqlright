@@ -1,6 +1,6 @@
 # SQLRight: A General Platform to Test DBMS Logical Bugs
 
-<a href="https://huhong789.github.io/papers/liang:sqlright.pdf"><img src="Paper/paper.jpg" align="right" width="250"></a>
+<a href="https://huhong789.github.io/papers/liang:sqlright.pdf"><img src="doc/paper.jpg" align="right" width="250"></a>
 
 ## Overview
 
