@@ -50,3 +50,10 @@ bash setup_mysql.sh
 * Docker for bisecting MySQL bug repors
 
 Due to the large size of the pre-compiled binaries, we exclude the steps to build the `sqlright_mysql_bisecting` docker. To bisect `MySQL` bug reports, pull the `sqlright_mysql_bisecting` docker from the `Docker Hub`
+
+### Troubleshooting
+
+- the Docker image building process failed or stucked
+  
+  * clean the Docker environment via `sudo docker system prune --all`
+  * rebuild the image

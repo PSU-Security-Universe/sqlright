@@ -163,3 +163,11 @@ bash run_mysql_bisecting.sh SQLRight --oracle TLP
 **NOTE:** Due to the long compilation time of `MySQL`, we suggest to use pre-compiled binaries to help the bisecting.
 The pre-built `MySQL` binaries should be placed in directory `<sqlright_root>/MySQL/bisecting/bisecting/mysql_binary_zip`
 `MySQL` pre-built binaries can be found in the `sqlright_mysql_bisecting` docker (available in `Docker Hub`). 
+
+
+### Troubleshooting
+
+- Fuzzer failed to launch, immediately return errors, or never output any results while running:
+
+    - check CPU settings: `Disable On-demand CPU scaling` and `Avoid having crashes being misinterpreted as hangs`
+    - make sure `--start-core` + `--num-concurrent` won't exceed the available CPU cores. (very common mistake)

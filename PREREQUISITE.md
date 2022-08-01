@@ -35,16 +35,3 @@ Interacting with `Docker` requires the `root` privilege. A non-root user should 
 ### Run docker inside VM
 
 Running `SQLRight` inside a virtual machine may lead to unexpected errors, and thus is not recommendated. If you have to do it, at least make sure `--start-core` + `--num-concurrent` won't exceed the total number of avaiable CPU cores in the VM.
-
-### Troubleshooting
-
-- the Docker image building process failed or stucked
-  
-  * clean the Docker environment via `sudo docker system prune --all`
-  * rebuild the image
-
-- Fuzzer failed to launch, immediately return errors, or never output any results while running:
-
-
-    - check CPU settings: `Disable On-demand CPU scaling` and `Avoid having crashes being misinterpreted as hangs`
-    - make sure `--start-core` + `--num-concurrent` won't exceed the available CPU cores. (very common mistake)
