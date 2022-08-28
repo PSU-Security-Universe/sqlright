@@ -372,6 +372,7 @@ public:
   ColumnDefList *column_def_list_;
   OptWithoutRowID *opt_without_rowid_;
   TableConstraintList *table_constraint_list_;
+  OptStrict *opt_strict_;
 };
 
 class InsertStatement : public PreparableStatement {
@@ -623,6 +624,7 @@ public:
   virtual void deep_delete();
   virtual IR *translate(vector<IR *> &v_ir_collector);
   FromClause *from_clause_;
+  OptColumnAlias *opt_column_alias_;
 };
 
 class OptWhere : public Opt {
@@ -1101,6 +1103,13 @@ public:
   const char *str_val_;
 };
 
+class OptStrict: public Node {
+public:
+  virtual void deep_delete();
+  virtual IR *translate(vector<IR *> &v_ir_collector);
+  const char *str_val_;
+};
+
 class OptColumnConstraintlist : public Opt {
 public:
   virtual void deep_delete();
@@ -1130,6 +1139,7 @@ public:
   ForeignKeyClause *foreign_key_clause_;
   Identifier *identifier_;
   OptStoredVirtual *opt_stored_virtual_;
+  OptConstraintName * opt_constraint_name_;
 };
 
 class TableConstraintList : public Node {

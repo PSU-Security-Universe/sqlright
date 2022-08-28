@@ -22,24 +22,23 @@ class Bisect:
 
         all_res_str_l = []
         for queries in queries_l:
-            all_res_str, res = Executor.execute_queries(
+            res_str, res_flag = Executor.execute_queries(
                 queries=queries, sqlite_install_dir=INSTALL_DEST_DIR, oracle=oracle
             )
-            all_res_str_l.append(all_res_str)
+            all_res_str_l.append(res_str)
 
-        if res == RESULT.SEG_FAULT:
-            log_out_line("Commit Segmentation fault. \n")
-            return RESULT.SEG_FAULT, None, None
+            if res_flag == RESULT.SEG_FAULT:
+                log_out_line("Commit Segmentation fault. \n")
+                return RESULT.SEG_FAULT, None, None
 
-        if len(all_res_str_l) == 0 or res == RESULT.ALL_ERROR:
+        if len(all_res_str_l) == 0:
             log_out_line("Result all Errors. \n")
             return RESULT.ALL_ERROR, None, None
 
         final_flag, all_res_flags = oracle.comp_query_res(queries_l, all_res_str_l)
 
-        #log_out_line("All_res_str_l: " + str(all_res_str_l) + "\n")
-        #log_out_line("Result with final_flag: " + str(final_flag))
         return final_flag, all_res_flags, all_res_str_l
+
 
     @classmethod
     def setup_previous_compile_fail(cls):
@@ -166,9 +165,7 @@ class Bisect:
             current_bisecting_result.is_bisecting_error = True
             current_bisecting_result.bisecting_error_reason = Error_reason
             current_bisecting_result.last_buggy_res_str_l = last_buggy_res_l
-            current_bisecting_result.last_buggy_res_flags_l = (
-                last_buggy_all_result_flags
-            )
+            current_bisecting_result.last_buggy_res_flags_l = last_buggy_all_result_flags
             current_bisecting_result.final_res_flag = rn_correctness
 
             return current_bisecting_result
@@ -184,9 +181,7 @@ class Bisect:
             current_bisecting_result.is_bisecting_error = True
             current_bisecting_result.bisecting_error_reason = Error_reason
             current_bisecting_result.last_buggy_res_str_l = last_buggy_res_l
-            current_bisecting_result.last_buggy_res_flags_l = (
-                last_buggy_all_result_flags
-            )
+            current_bisecting_result.last_buggy_res_flags_l = last_buggy_all_result_flags
             current_bisecting_result.final_res_flag = rn_correctness
 
             return current_bisecting_result
@@ -324,11 +319,8 @@ class Bisect:
             return current_bisecting_result, True, current_bug_id_pair[1]  # Duplicated results. Return duplicated count
 
     @classmethod
-    def run_bisecting(cls, queries_l, oracle, vercon, current_file, iter_idx:int, is_non_deter: bool):
-        log_out_line(
-            "\n\n\nBegin bisecting query with SELECT idx %d: \n\n%s \n\n\n"
-            % (iter_idx, queries_l[0])
-        )
+    def run_bisecting(cls, queries_l, oracle, vercon, current_file, is_non_deter: bool):
+
         current_bisecting_result = cls.bi_secting_commits(
             queries_l=queries_l, oracle=oracle, vercon=vercon
         )

@@ -35,7 +35,7 @@ class Oracle_LIKELY:
             )  # Missing the outputs from the opt or the unopt. Returnning None implying errors.
 
         # Grab all the ori results.
-        ori_results = []
+        ori_result = ""
         begin_idx = []
         end_idx = []
         for m in re.finditer(r"BEGIN VERI 0", result_str):
@@ -45,12 +45,12 @@ class Oracle_LIKELY:
         for i in range(min(len(begin_idx), len(end_idx))):
             current_opt_result = result_str[begin_idx[i] : end_idx[i]]
             if "Error" in current_opt_result:
-                ori_results.append("Error")
+                ori_result = "Error"
             else:
-                ori_results.append(current_opt_result)
+                ori_result = current_opt_result
 
         # Grab all the LIKELY results.
-        likely_results = []
+        likely_result = ""
         begin_idx = []
         end_idx = []
         for m in re.finditer(r"BEGIN VERI 1", result_str):
@@ -60,12 +60,12 @@ class Oracle_LIKELY:
         for i in range(min(len(begin_idx), len(end_idx))):
             current_unopt_result = result_str[begin_idx[i] : end_idx[i]]
             if "Error" in current_unopt_result:
-                likely_results.append("Error")
+                likely_result = "Error"
             else:
-                likely_results.append(current_unopt_result)
+                likely_result = current_unopt_result
 
         # Grab all the UNLIKELY results.
-        unlikely_results = []
+        unlikely_result = ""
         begin_idx = []
         end_idx = []
         for m in re.finditer(r"BEGIN VERI 2", result_str):
@@ -75,21 +75,17 @@ class Oracle_LIKELY:
         for i in range(min(len(begin_idx), len(end_idx))):
             current_unopt_result = result_str[begin_idx[i] : end_idx[i]]
             if "Error" in current_unopt_result:
-                unlikely_results.append("Error")
+                unlikely_result = "Error"
             else:
-                unlikely_results.append(current_unopt_result)
+                unlikely_result = current_unopt_result
 
-        all_results_out = []
-        for i in range(min(len(ori_results), len(likely_results))):
-            cur_results_out = [ori_results[i], likely_results[i], unlikely_results[i]]
-            all_results_out.append(cur_results_out)
+        return [ori_result, likely_result, unlikely_result], RESULT.PASS
 
-        return all_results_out, RESULT.PASS
 
     @classmethod
     def comp_query_res(cls, queries_l, all_res_str_l):
         queries = queries_l[0]
-        valid_type_list = cls._get_valid_type_list(queries)
+        valid_type = cls._get_valid_type_list(queries)
 
         # Has only one run through
         all_res_str_l = all_res_str_l[0]
@@ -97,68 +93,58 @@ class Oracle_LIKELY:
         all_res_out = []
         final_res = RESULT.PASS
 
-        for idx, valid_type in enumerate(valid_type_list):
-            # print(opt_result)
-            # if idx >= len(opt_result) or idx >= len(unopt_result):
-            #     break
-            if valid_type == VALID_TYPE_LIKELY.NORM:
-                curr_res = cls._check_result_norm(
-                    all_res_str_l[idx][0], all_res_str_l[idx][1], all_res_str_l[idx][2]
-                )
-                all_res_out.append(curr_res)
-            elif valid_type == VALID_TYPE_LIKELY.DISTINCT:
-                curr_res = cls._check_result_norm(
-                    all_res_str_l[idx][0], all_res_str_l[idx][1], all_res_str_l[idx][2]
-                )
-                all_res_out.append(curr_res)
-            elif valid_type == VALID_TYPE_LIKELY.GROUP_BY:
-                curr_res = cls._check_result_norm(
-                    all_res_str_l[idx][0], all_res_str_l[idx][1], all_res_str_l[idx][2]
-                )
-                all_res_out.append(curr_res)
-            elif valid_type == VALID_TYPE_LIKELY.AVG:
-                curr_res = cls._check_result_aggr(
-                    all_res_str_l[idx][0], all_res_str_l[idx][1], all_res_str_l[idx][2], valid_type
-                )
-                all_res_out.append(curr_res)
-            elif valid_type == VALID_TYPE_LIKELY.COUNT:
-                curr_res = cls._check_result_aggr(
-                    all_res_str_l[idx][0], all_res_str_l[idx][1], all_res_str_l[idx][2], valid_type
-                )
-                all_res_out.append(curr_res)
-            elif valid_type == VALID_TYPE_LIKELY.MAX:
-                curr_res = cls._check_result_aggr(
-                    all_res_str_l[idx][0], all_res_str_l[idx][1], all_res_str_l[idx][2], valid_type
-                )
-                all_res_out.append(curr_res)
-            elif valid_type == VALID_TYPE_LIKELY.MIN:
-                curr_res = cls._check_result_aggr(
-                    all_res_str_l[idx][0], all_res_str_l[idx][1], all_res_str_l[idx][2], valid_type
-                )
-                all_res_out.append(curr_res)
-            elif valid_type == VALID_TYPE_LIKELY.SUM:
-                curr_res = cls._check_result_aggr(
-                    all_res_str_l[idx][0], all_res_str_l[idx][1], all_res_str_l[idx][2], valid_type
-                )
-                all_res_out.append(curr_res)
-            else:
-                curr_res = RESULT.ERROR
-                all_res_out.append(curr_res)
+        # print(opt_result)
+        # if idx >= len(opt_result) or idx >= len(unopt_result):
+        #     break
+        if valid_type == VALID_TYPE_LIKELY.NORM:
+            curr_res = cls._check_result_norm(
+                all_res_str_l[0], all_res_str_l[1], all_res_str_l[2]
+            )
+            all_res_out.append(curr_res)
+        elif valid_type == VALID_TYPE_LIKELY.DISTINCT:
+            curr_res = cls._check_result_norm(
+                all_res_str_l[0], all_res_str_l[1], all_res_str_l[2]
+            )
+            all_res_out.append(curr_res)
+        elif valid_type == VALID_TYPE_LIKELY.GROUP_BY:
+            curr_res = cls._check_result_norm(
+                all_res_str_l[0], all_res_str_l[1], all_res_str_l[2]
+            )
+            all_res_out.append(curr_res)
+        elif valid_type == VALID_TYPE_LIKELY.AVG:
+            curr_res = cls._check_result_aggr(
+                all_res_str_l[0], all_res_str_l[1], all_res_str_l[2], valid_type
+            )
+            all_res_out.append(curr_res)
+        elif valid_type == VALID_TYPE_LIKELY.COUNT:
+            curr_res = cls._check_result_aggr(
+                all_res_str_l[0], all_res_str_l[1], all_res_str_l[2], valid_type
+            )
+            all_res_out.append(curr_res)
+        elif valid_type == VALID_TYPE_LIKELY.MAX:
+            curr_res = cls._check_result_aggr(
+                all_res_str_l[0], all_res_str_l[1], all_res_str_l[2], valid_type
+            )
+            all_res_out.append(curr_res)
+        elif valid_type == VALID_TYPE_LIKELY.MIN:
+            curr_res = cls._check_result_aggr(
+                all_res_str_l[0], all_res_str_l[1], all_res_str_l[2], valid_type
+            )
+            all_res_out.append(curr_res)
+        elif valid_type == VALID_TYPE_LIKELY.SUM:
+            curr_res = cls._check_result_aggr(
+                all_res_str_l[0], all_res_str_l[1], all_res_str_l[2], valid_type
+            )
+            all_res_out.append(curr_res)
+        else:
+            curr_res = RESULT.ERROR
+            all_res_out.append(curr_res)
 
-        for curr_res_out in all_res_out:
-            if curr_res_out == RESULT.FAIL:
-                final_res = RESULT.FAIL
-                break
-
-        is_all_query_return_errors = True
-        for curr_res_out in all_res_out:
-            if curr_res_out != RESULT.ERROR:
-                is_all_query_return_errors = False
-                break
-        if is_all_query_return_errors:
-            final_res = RESULT.ALL_ERROR
-
-        return final_res, all_res_out
+        if all_res_out[0] == RESULT.Error:
+            return RESULT.ALL_ERROR, all_res_out
+        else:
+            tmp_res = all_res_out[0]
+            return tmp_res, all_res_out
 
     @classmethod
     def _get_valid_type_list(cls, query: str):
@@ -171,7 +157,6 @@ class Oracle_LIKELY:
             return []  # query is not making sense at all.
 
         # Grab all the opt queries, detect its valid_type, and return.
-        valid_type_list = []
         begin_idx = []
         end_idx = []
         for m in re.finditer(r"SELECT 'BEGIN VERI 0';", query):
@@ -180,11 +165,10 @@ class Oracle_LIKELY:
             r"SELECT 'END VERI 0';", query
         ):  # Might contains additional unnecessary characters, such as SELECT in the SELECT 97531;
             end_idx.append(m.start())
-        for i in range(min(len(begin_idx), len(end_idx))):
-            current_opt_query = query[begin_idx[i] : end_idx[i]]
-            valid_type_list.append(cls._get_valid_type(current_opt_query))
 
-        return valid_type_list
+        current_opt_query = query[begin_idx[0] : end_idx[0]]
+        return cls._get_valid_type(current_opt_query)
+
 
     @classmethod
     def _get_valid_type(cls, query: str):

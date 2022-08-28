@@ -89,6 +89,7 @@
 #include "../oracle/sqlite_oracle.h"
 #include "../oracle/sqlite_rowid.h"
 #include "../oracle/sqlite_tlp.h"
+#include "../oracle/sqlite_opt.h"
 
 #if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__)
 #include <sys/sysctl.h>
@@ -2798,12 +2799,8 @@ void compare_query_results_cross_run(ALL_COMP_RES &all_comp_res,
 
   vector<vector<string>> res_vec, exp_vec;
 
-  for (int idx = 0; idx < p_oracle->get_mul_run_num(); idx++) {
-    if (idx >= all_comp_res.v_res_str.size()) {
-      cerr << "Error: v_res_str overflow in the "
-              "compare_query_results_cross_run func. \n";
-      abort();
-    }
+  for (int idx = 0; idx < all_comp_res.v_res_str.size(); idx++) {
+
     const string &res_str = all_comp_res.v_res_str[idx];
     const string &cmd_str = all_comp_res.v_cmd_str[idx];
 
@@ -2818,8 +2815,8 @@ void compare_query_results_cross_run(ALL_COMP_RES &all_comp_res,
     //   cerr << "cur_res_vec: " << cur_res_vec[i] << endl;
     // }
 
-    res_vec.push_back(std::move(cur_res_vec));
-    exp_vec.push_back(std::move(cur_exp_vec));
+    res_vec.push_back(cur_res_vec);
+    exp_vec.push_back(cur_exp_vec);
   }
 
   /* Compare valid stat by valid stat between different runs. */
@@ -2946,7 +2943,7 @@ void stream_output_res(const ALL_COMP_RES &all_comp_res, ostream &out) {
           << "Fourth stmt is (int): " << res.res_int_3 << "\n";
     }
 
-    out << "Compare_No_Rec_result_int: \n" << all_comp_res.final_res;
+    out << "Compare_result_int: \n" << all_comp_res.final_res;
     out << "\n\n\n\n";
 
   } else { // multiple execute SQLite.
@@ -2975,7 +2972,7 @@ void stream_output_res(const ALL_COMP_RES &all_comp_res, ostream &out) {
       iter++;
     }
 
-    out << "Compare_No_Rec_result_int: \n" << all_comp_res.final_res;
+    out << "Compare_result_int: \n" << all_comp_res.final_res;
     out << "\n\n\n\n";
   }
 }
@@ -2996,6 +2993,7 @@ u8 execute_cmd_string(vector<string>& cmd_string_vec, vector<int> &explain_diff_
     if ((cmd_string.find("RANDOM") != std::string::npos) ||
         (cmd_string.find("random") != std::string::npos) ||
         (cmd_string.find("JULIANDAY") != std::string::npos) ||
+        (cmd_string.find("vdbe_") != std::string::npos) ||
         (cmd_string.find("julianday") != std::string::npos)) {
       return FAULT_ERROR;
     }
@@ -3043,6 +3041,7 @@ u8 execute_cmd_string(vector<string>& cmd_string_vec, vector<int> &explain_diff_
     compare_query_result(all_comp_res, explain_diff_id);
   } else {
     /* Compare results of the same validation stmts in different runs. */
+    //cout << "Getting multi_loop size: " << cmd_string_vec.size() << endl;
     for (int idx = 0; idx < cmd_string_vec.size(); idx++) {
       string cmd_string = cmd_string_vec[idx];
 
@@ -3070,8 +3069,8 @@ u8 execute_cmd_string(vector<string>& cmd_string_vec, vector<int> &explain_diff_
       }
       res_str = read_sqlite_output_and_reset_output_file();
 
-      all_comp_res.v_cmd_str.push_back(std::move(cmd_string));
-      all_comp_res.v_res_str.push_back(std::move(res_str));
+      all_comp_res.v_cmd_str.push_back(cmd_string);
+      all_comp_res.v_res_str.push_back(res_str);
 
     } // End for run_id loop.
 
@@ -3088,7 +3087,7 @@ u8 execute_cmd_string(vector<string>& cmd_string_vec, vector<int> &explain_diff_
   }
 
   /* Some useful debug output. That could show what queries are being tested. */
-  // stream_output_res(all_comp_res, cerr);
+   //stream_output_res(all_comp_res, cerr);
 
   if (all_comp_res.final_res == ORA_COMP_RES::Fail) {
 
@@ -6173,11 +6172,18 @@ static u8 fuzz_one(char **argv) {
       goto abandon_entry;
     }
 
-    if (query_str_vec[0] == "" || query_str_vec.size() == 0) {
+    if (query_str_vec.size() == 0 || query_str_vec[0] == "") {
       total_append_failed++;
       skip_count++;
       continue;
     } else {
+        if (p_oracle->get_oracle_type() == "OPT") {
+            // dirty fix for now.
+          query_str_vec.pop_back();
+          query_str_vec.push_back(".testctrl optimization 0xffffffff; \n" + query_str_vec[0]);
+          query_str_vec.push_back(".testctrl optimization 0x00000000; \n" + query_str_vec[0]);
+        }
+
       show_stats();
       stage_name = "fuzz";
       // cerr << "IR_STR is: " << query_str << endl;
@@ -7671,6 +7677,8 @@ int main(int argc, char **argv) {
         p_oracle = new SQL_ROWID();
       else if (arg == "INDEX")
         p_oracle = new SQL_INDEX();
+      else if (arg == "OPT")
+        p_oracle = new SQL_OPT();
       else
         FATAL("Oracle arguments not supported. ");
     } break;
@@ -7682,7 +7690,7 @@ int main(int argc, char **argv) {
 
   /* Finish setup g_mutator and p_oracle; */
   if (p_oracle == nullptr)
-    p_oracle = new SQL_NOREC();
+    p_oracle = new SQL_OPT();
   p_oracle->set_mutator(&g_mutator);
   g_mutator.set_p_oracle(p_oracle);
   g_mutator.set_dump_library(dump_library);

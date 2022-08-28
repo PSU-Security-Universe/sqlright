@@ -57,7 +57,7 @@ class IO:
             current_file_d = iter_file_d
             idx += 1
 
-            if current_file_d == "":
+            if current_file_d == "" or current_file_d[:4] != "bug:":
                 continue
 
             log_out_line("Found bug sample: {}".format(current_file_d))
@@ -87,6 +87,9 @@ class IO:
             cls.all_files_in_dir = []
             cls.is_checked = True
 
+        if len(all_queries) == 0:
+            return None, "Done"
+
         #log_out_line(
         #    "Finished reading current query files from the bug_samples folder. "
         #)
@@ -97,9 +100,22 @@ class IO:
 
     @classmethod
     def _restructured_and_clean_all_queries(cls, all_queries):
-        output_all_queries = []
+        """
+            Return two-layer list. 
+            The first layer is the different selects. 
+            The second layer is the different run through of the same select. 
+        """
+
+        all_queries_str_l = []
         buggy_flag = []
         buggy_idx = []
+
+        """
+        # Here, the output_all_queries is a vector, 
+        # each element saves the complete query string from one execution.
+        # If the oracle only run one set of query sequence, the output_all_queries
+        # would only contains one element.
+        """
 
         for queries in all_queries:
             current_queries_in = queries.split("\n")
@@ -110,7 +126,7 @@ class IO:
                     buggy_flag.append(query)
                 if "Result string" in query:
                     is_adding = False
-                    output_all_queries.append(current_queries_out)
+                    all_queries_str_l.append(current_queries_out)
                     current_queries_out = ""
                     continue
                 if not re.search(r"\w", query):
@@ -136,33 +152,52 @@ class IO:
             If one buggy query contains multiple SELECT oracle mismatch,
             these mismatches could due to different reasons, 
         """
-        output_all_queries_tmp = []
-        for cur_query in output_all_queries:
+        res_out_all_queries = [] # Top layer is multi-run queries. 
+
+        # Loop through different run-through. 
+        for cur_query in all_queries_str_l:
+            cur_run_query_l = []
+
             cur_query_l = cur_query.split("SELECT 'BEGIN VERI 0';")
             database_mangagement_queries = cur_query_l[0]
+
+            # Loop through all SELECTs in one runs. 
             for i in range(1, len(cur_query_l)):
+                if i-1 not in buggy_idx:
+                    # No need to save not-buggy SELECT. 
+                    continue
                 output_queries_out = database_mangagement_queries + "SELECT 'BEGIN VERI 0';"
                 output_queries_out += cur_query_l[i]
-                if (i - 1) >= len(output_all_queries_tmp):
-                    new_list_tmp = []
-                    new_list_tmp.append(output_queries_out)
-                    output_all_queries_tmp.append(new_list_tmp)
-                else:
-                    output_all_queries_tmp[i-1].append(output_queries_out)
-        
-        output_all_queries = []
-        for idx in buggy_idx:
-            if idx < len(output_all_queries_tmp):
-                output_all_queries.append(output_all_queries_tmp[idx])
 
-        # print("Debug: printing all the read queries: \n")
-        # for cur_output_query in output_all_queries:
-            # for cur_query in cur_output_query:
-                # print(cur_query)
-                # print("\n\n\n")
-            # print("\n\n\n\n\n\n\n")
+                cur_run_query_l.append(output_queries_out)
 
-        return output_all_queries
+            # Save one run-through results. 
+            res_out_all_queries.append(cur_run_query_l)
+
+        # Change the top-level of res_out_all_queries to different selects. 
+        tmp_res_out_all_queries = []
+        # First loop j, then i. 
+        for j in range(len(res_out_all_queries[0])):
+            for i in range(len(res_out_all_queries)):
+                if j >= len(res_out_all_queries[i]):
+                    continue
+                # reconstruct new list
+                while j > len(tmp_res_out_all_queries) - 1:
+                    tmp_res_out_all_queries.append([])
+                tmp_res_out_all_queries[j].append(res_out_all_queries[i][j])
+
+        res_out_all_queries = tmp_res_out_all_queries
+
+        print("Debug: printing all the read queries: \n")
+        for select_idx, cur_select_query in enumerate(res_out_all_queries):
+            print("Select %d: " % (select_idx))
+            for idx, cur_query in enumerate(cur_select_query):
+                print("Run idx: %d " % (idx))
+                print(cur_query)
+                print("\n\n\n")
+            print("\n\n\n\n\n\n\n")
+
+        return res_out_all_queries
 
     @classmethod
     def _retrive_all_verifi_queries_matches(
@@ -183,12 +218,10 @@ class IO:
             current_stmt = current_stmt.replace("\n", "")
             if current_stmt == "" or current_stmt == " ":
                 continue
-            queries_pairs.append(current_stmt)
-            if len(queries_pairs) == oracle.veri_vari_num:
-                queries_out.append(queries_pairs)
-                queries_pairs = []
+            # if len(queries_pairs) == oracle.veri_vari_num:
+            queries_out.append(current_stmt)
 
-        log_out_line("Veri_stmts are: %s\n" % (str(queries_out)))
+        log_out_line("Veri_stmts are: %s\n" % (" ".join(queries_out)))
         return queries_out
 
     @classmethod
@@ -222,9 +255,7 @@ class IO:
         return normal_query
 
     @classmethod
-    def _pretty_print(cls, query, same_idx, oracle):
-
-        log_out_line("Ori query is: \n%s\n" % (query))
+    def _pretty_print(cls, query, oracle):
 
         start_of_norec = query.find("SELECT 'BEGIN VERI 0';")
 
@@ -246,12 +277,9 @@ class IO:
         new_tail = "\n\n\n"
         effect_idx = 0
         for idx in range(len(veri_stmts)):
-            if idx in same_idx:
-                continue
-            effect_idx += 1
             new_tail += 'SELECT --------- ' + str(effect_idx) + "  "
-            for cur_veri_stmt in veri_stmts[idx]:
-                new_tail += cur_veri_stmt + "    "
+            new_tail += veri_stmts[idx]
+            effect_idx += 1
             new_tail += "\n"
 
         return header + new_tail
@@ -265,32 +293,15 @@ class IO:
         ):
             return
 
-        same_idx = []
-        for idx in range(len(bisecting_result.last_buggy_res_flags_l)):
-            # Ignore the result with the same output, and ignore the result that are negative. (-1 Error Execution for most cases)
-            if bisecting_result.last_buggy_res_flags_l[idx] != RESULT.FAIL:
-                same_idx.append(idx)
-                continue
-
         log_out_line("res_flags: %s" % (str(bisecting_result.last_buggy_res_flags_l)))
-
-        log_out_line("same_idx: %s" % (str(same_idx)))
 
         log_out_line("res: %s" % (str(bisecting_result.last_buggy_res_str_l)))
 
         pretty_query = []
         for cur_query in bisecting_result.query:
-            pretty_query.append(cls._pretty_print(cur_query, same_idx, oracle))
-        bisecting_result.query = pretty_query
+            pretty_query.append(cls._pretty_print(cur_query, oracle))
 
-        same_idx.reverse()
-        for idx in same_idx:
-            for j in range(len(bisecting_result.last_buggy_res_str_l)):
-                if idx >= len(bisecting_result.last_buggy_res_str_l[j]):
-                    # sometimes the idx can larger than
-                    # the length of last_buggy_res_str_l[j]
-                    continue
-                bisecting_result.last_buggy_res_str_l[j].pop(idx)
+        bisecting_result.query = pretty_query
 
     @classmethod
     def _is_identified_bugs(cls, result: BisectingResults):
@@ -384,10 +395,12 @@ class IO:
     ):
         cls._pretty_process(current_bisecting_result, oracle)
 
-        if not cls._is_identified_bugs(current_bisecting_result) and not is_non_deter:
-            # If the bug does not match the filter, do not output it to the unique bug folder. 
-            print("All bug pattern mismatched. Skip the bug. ")
-            return None
+        # Debugging purpose. 
+        # if not cls._is_identified_bugs(current_bisecting_result) and not is_non_deter:
+            # # If the bug does not match the filter, do not output it to the unique bug folder. 
+            # print("All bug pattern mismatched. Skip the bug. ")
+            # return None
+
         if not os.path.isdir(UNIQUE_BUG_OUTPUT_DIR):
             os.mkdir(UNIQUE_BUG_OUTPUT_DIR)
         current_unique_bug_output = os.path.join(
@@ -410,7 +423,7 @@ class IO:
             bug_output_file.write("Bug ID: Unknown. \n\n")
 
         for idx, cur_query in enumerate(current_bisecting_result.query):
-            bug_output_file.write("Query %d: \n%s \n\n" % (idx, cur_query))
+            bug_output_file.write("Query Run %d: \n%s \n\n" % (idx, cur_query))
 
         if current_bisecting_result.final_res_flag == RESULT.SEG_FAULT:
             bug_output_file.write(
@@ -425,18 +438,14 @@ class IO:
                 for i, cur_run_res in enumerate(
                     current_bisecting_result.last_buggy_res_str_l
                 ):
-                    for j, cur_res in enumerate(cur_run_res):
-                        bug_output_file.write("Last Buggy Result Num: %d \n" % j)
-                        for k, cur_r in enumerate(cur_res):
-                            bug_output_file.write("RES %d: \n%s\n" % (k, cur_r))
+                    bug_output_file.write("Last Buggy Result Num: %d \n" % i)
+                    bug_output_file.write("RES %d: \n%s\n" % (i, cur_run_res))
             else:
-                for j in range(len(current_bisecting_result.last_buggy_res_str_l[0])):
-                    bug_output_file.write("Last Buggy Result Num: %d \n" % j)
-                    for i in range(len(current_bisecting_result.last_buggy_res_str_l)):
-                        bug_output_file.write(
-                            "\nBuggy Run ID: %d, Results: \n%s\n"
-                            % (i, current_bisecting_result.last_buggy_res_str_l[i][j])
-                        )
+                for i, cur_run_res in enumerate(
+                    current_bisecting_result.last_buggy_res_str_l
+                ):
+                    bug_output_file.write("Last Buggy Result Num: %d \n" % i)
+                    bug_output_file.write("RES %d: \n%s\n" % (i, cur_run_res))
 
         else:
             bug_output_file.write(

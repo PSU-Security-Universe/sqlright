@@ -38,6 +38,6 @@ class Executor:
             return None, RESULT.SEG_FAULT  # Is segmentation fault
         child.kill()
 
-        all_res_str_l, res_flag = oracle.retrive_all_results(result_str)
+        res_str, res_flag = oracle.retrive_all_results(result_str)
 
-        return all_res_str_l, res_flag
+        return res_str, res_flag

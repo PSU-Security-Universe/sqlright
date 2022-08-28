@@ -129,6 +129,7 @@ int yyerror(YYLTYPE* llocp, Program * result, yyscan_t scanner, const char *msg)
     DropTriggerStatement* drop_trigger_statement_t;
     OptIfExists* opt_if_exists_t;
     OptWithoutRowID* opt_without_rowid_t;
+    OptStrict* opt_strict_t;
     DeleteStatement* delete_statement_t;
     InsertStatement* insert_statement_t;
     OptColumnListParen * opt_column_list_paren_t;
@@ -313,7 +314,7 @@ int yyerror(YYLTYPE* llocp, Program * result, yyscan_t scanner, const char *msg)
 /* SQL Keywords */
 %token DEALLOCATE PARAMETERS INTERSECT TEMPORARY TIMESTAMP
 %token CURRENT_TIME CURRENT_DATE CURRENT_TIMESTAMP
-%token DISTINCT RESTRICT TRUNCATE ANALYZE BETWEEN
+%token DISTINCT RESTRICT TRUNCATE ANALYZE BETWEEN STRICT
 %token CASCADE COLUMNS CONTROL DEFAULT EXECUTE EXPLAIN
 %token INTEGER NATURAL PREPARE PRIMARY SCHEMAS
 %token SPATIAL VIRTUAL DESCRIBE BEFORE COLUMN CREATE DELETE DIRECT STORED
@@ -324,7 +325,7 @@ int yyerror(YYLTYPE* llocp, Program * result, yyscan_t scanner, const char *msg)
 %token OUTER RIGHT TABLE UNION USING WHERE CALL CASE DATE DATETIME
 %token CHAR CHARACTER NCHAR VARYING NATIVE VARCHAR NVARCHAR
 %token DESC DROP ELSE FILE FROM FULL HASH HINT INTO JOIN
-%token LEFT LIKE LOAD LONG NULL PLAN SHOW TEXT THEN TIME BLOB CLOB
+%token LEFT LIKE LOAD LONG NULL PLAN SHOW TEXT ANY STRINGTOKEN THEN TIME BLOB CLOB
 %token VIEW WHEN WITH ADD ALL AND ASC CSV END FOR INT KEY REAL BOOL BOOLEAN
 %token TINYINT SMALLINT MEDIUMINT BIGINT UNSIGNED BIG INT2 INT8
 %token NOT OFF SET TOP AS BY IF IN IS OF ON OR TO
@@ -336,7 +337,7 @@ int yyerror(YYLTYPE* llocp, Program * result, yyscan_t scanner, const char *msg)
 */
 
 %token PRAGMA REINDEX GENERATED ALWAYS CHECK CONFLICT IGNORE REPLACE ROLLBACK REFERENCES
-%token ABORT FAIL AUTOINCR BEGIN TRIGGER TEMP INSTEAD EACH ROW OVER FILTER PARTITION
+%token ABORT FAIL AUTOINCR AUTOINCREMENT BEGIN TRIGGER TEMP INSTEAD EACH ROW OVER FILTER PARTITION
 %token CURRENT EXCLUDE FOLLOWING GROUPS NO OTHERS PRECEDING RANGE ROWS TIES UNBOUNDED WINDOW
 %token ATTACH DETACH DATABASE INDEXED CAST SAVEPOINT RELEASE VACUUM TRANSACTION DEFFERED EXCLUSIVE
 %token IMEDIATE COMMIT GLOB MATCH REGEXP NOTHING NULLS LAST FIRST DO COLLATE RAISE RECURSIVE
@@ -436,6 +437,7 @@ int yyerror(YYLTYPE* llocp, Program * result, yyscan_t scanner, const char *msg)
 %type <common_table_expr_list_t> common_table_expr_list
 %type <opt_semicolon_t>	opt_semicolon
 %type <opt_without_rowid_t> opt_without_rowid
+%type <opt_strict_t> opt_strict
 
 %type <join_op_t> join_op
 %type <join_constraint_t> join_constraint
@@ -877,12 +879,12 @@ upsert_item:
           $$->sub_type_ = CASE0;
           $$->opt_conflict_target_ = $3;
         }
-    |   ON CONFLICT opt_conflict_target UPDATE SET assign_list opt_where {
+    |   ON CONFLICT opt_conflict_target DO UPDATE SET assign_list opt_where {
           $$ = new UpsertItem();
           $$->sub_type_ = CASE1;
           $$->opt_conflict_target_ = $3;
-          $$->assign_list_ = $6;
-          $$->opt_where_ = $7;
+          $$->assign_list_ = $7;
+          $$->opt_where_ = $8;
         }
     ;
 
@@ -1085,7 +1087,7 @@ create_table_statement:
           $$->table_name_ = $5;
           $$->select_statement_ = $7;
         }
-    |   CREATE opt_tmp TABLE opt_if_not_exists table_name '(' column_def_list ')' opt_without_rowid {
+    |   CREATE opt_tmp TABLE opt_if_not_exists table_name '(' column_def_list ')' opt_without_rowid opt_strict {
           $$ = new CreateTableStatement();
           $$->sub_type_ = CASE1;
           $$->opt_tmp_ = NULL; $2->deep_delete(); // we do not want TEMP
@@ -1094,8 +1096,9 @@ create_table_statement:
           $$->table_name_ = $5;
           $$->column_def_list_ = $7;
           $$->opt_without_rowid_ = $9;
+          $$->opt_strict_ = $10;
         }
-    |   CREATE opt_tmp TABLE opt_if_not_exists table_name '(' column_def_list ',' table_constraint_list ')' opt_without_rowid {
+    |   CREATE opt_tmp TABLE opt_if_not_exists table_name '(' column_def_list ',' table_constraint_list ')' opt_without_rowid opt_strict {
           $$ = new CreateTableStatement();
           $$->sub_type_ = CASE2;
           $$->opt_tmp_ = NULL; $2->deep_delete(); // we do not want TEMP
@@ -1105,6 +1108,7 @@ create_table_statement:
           $$->column_def_list_ = $7;
           $$->table_constraint_list_ = $9;
           $$->opt_without_rowid_ = $11;
+          $$->opt_strict_ = $12;
         }
     ;
 
@@ -1205,6 +1209,11 @@ create_statement:
 opt_without_rowid:
         WITHOUT ROWID {$$ = new OptWithoutRowID(); $$->str_val_ = "WITHOUT ROWID";}
     |   /* empty */  {{$$ = new OptWithoutRowID(); $$->str_val_ = "";}}
+
+opt_strict:
+        STRICT  {$$ = new OptStrict(); $$->str_val_ = "STRICT"; }
+    |   ',' STRICT  {$$ = new OptStrict(); $$->str_val_ = ", STRICT"; }
+    |   /* empty */  {$$ = new OptStrict(); $$->str_val_ = ""; }
 
 opt_unique:
         UNIQUE {$$ = new OptUnique(); $$->str_val_ = "UNIQUE";}
@@ -1419,28 +1428,32 @@ foreign_key_clause:
     ;
 
 column_constraint:
-        PRIMARY KEY opt_order_type opt_conflict_clause opt_autoinc {
+        opt_constraint_name PRIMARY KEY opt_order_type opt_conflict_clause opt_autoinc {
           $$ = new ColumnConstraint();
           $$->sub_type_ = CASE0;
-          $$->opt_order_type_ = $3;
-          $$->opt_conflict_clause_ = $4;
-          $$->opt_autoinc_ = $5;
+          $$->opt_constraint_name_ = $1;
+          $$->opt_order_type_ = $4;
+          $$->opt_conflict_clause_ = $5;
+          $$->opt_autoinc_ = $6;
         }
-    |   opt_not NULL opt_conflict_clause {
+    |   opt_constraint_name opt_not NULL opt_conflict_clause {
           $$ = new ColumnConstraint();
           $$->sub_type_ = CASE1;
-          $$->opt_not_ = $1;
-          $$->opt_conflict_clause_ = $3;
+          $$->opt_constraint_name_ = $1;
+          $$->opt_not_ = $2;
+          $$->opt_conflict_clause_ = $4;
         }
-    |   UNIQUE opt_conflict_clause {
+    |   opt_constraint_name UNIQUE opt_conflict_clause {
           $$ = new ColumnConstraint();
           $$->sub_type_ = CASE2;
-          $$->opt_conflict_clause_ = $2;
+          $$->opt_constraint_name_ = $1;
+          $$->opt_conflict_clause_ = $3;
         }
-    |   CHECK '(' new_expr ')' {
+    |   opt_constraint_name CHECK '(' new_expr ')' {
           $$ = new ColumnConstraint();
           $$->sub_type_ = CASE3;
-          $$->expr_ = $3;
+          $$->opt_constraint_name_ = $1;
+          $$->expr_ = $4;
         }
     |   DEFAULT '(' new_expr ')' {
           $$ = new ColumnConstraint();
@@ -1462,10 +1475,11 @@ column_constraint:
           $$->sub_type_ = CASE7;
           $$->collate_ = $1;
         }
-    |   foreign_key_clause {
+    |   opt_constraint_name foreign_key_clause {
           $$ = new ColumnConstraint();
           $$->sub_type_ = CASE8;
-          $$->foreign_key_clause_ = $1;
+          $$->opt_constraint_name_ = $1;
+          $$->foreign_key_clause_ = $2;
         }
     |   GENERATED ALWAYS AS '(' new_expr ')' opt_stored_virtual {
           $$ = new ColumnConstraint();
@@ -1479,6 +1493,10 @@ column_constraint:
           $$->expr_ = $3;
           $$->opt_stored_virtual_ = $5;
         }
+    |   GENERATED ALWAYS {
+          $$ = new ColumnConstraint();
+          $$->sub_type_ = CASE11;
+    }
     ;
 
 opt_stored_virtual:
@@ -1506,6 +1524,7 @@ resolve_type:
 /* seems the keyword AUTOINCREMENT is not supported by sqlite, weird */
 opt_autoinc:
         AUTOINCR {$$ = new OptAutoinc(); $$->str_val_ = "AUTOINCR";}
+    |   AUTOINCREMENT {$$ = new OptAutoinc(); $$->str_val_ = "AUTOINCREMENT";}
     |   /* empty */ {$$ = new OptAutoinc(); $$->str_val_ = "";}
     ;
 
@@ -1561,6 +1580,8 @@ column_type:
             }
     |   DATE { $$ = new ColumnType(); $$->str_val_ = string("DATE"); }
     |   DATETIME { $$ = new ColumnType(); $$->str_val_ = string("DATETIME"); }
+    |   STRINGTOKEN  {$$ = new ColumnType(); $$->str_val_ = string("STRING"); }
+    |   ANY  {$$ = new ColumnType(); $$->str_val_ = string("ANY"); }
     |   /* empty*/ { $$ = new ColumnType(); $$->str_val_ = string(""); }
     ;
 
@@ -1917,7 +1938,7 @@ returning_column:
 
 
 opt_from_clause:
-        from_clause  { $$ = new OptFromClause(); $$->sub_type_ = CASE0; $$->from_clause_ = $1;}
+        from_clause opt_column_alias  { $$ = new OptFromClause(); $$->sub_type_ = CASE0; $$->from_clause_ = $1; $$->opt_column_alias_ = $2;}
     |   /* empty */  { $$ = new OptFromClause(); $$->sub_type_ = CASE1;}
     ;
 

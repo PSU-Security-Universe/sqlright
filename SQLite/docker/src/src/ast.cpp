@@ -641,7 +641,10 @@ IR *CreateTableStatement::translate(vector<IR *> &v_ir_collector) {
   res = new IR(kUnknown, OP3("", "(", ")"), res, tmp3);
   PUSH(res);
   auto tmp4 = SAFETRANSLATE(opt_without_rowid_);
-  res = new IR(kCreateTableStatement, OP0(), res, tmp4);
+  res = new IR(kUnknown, OP0(), res, tmp4);
+  PUSH(res);
+  auto tmp5 = SAFETRANSLATE(opt_strict_);
+  res = new IR(kCreateTableStatement, OP0(), res, tmp5);
   CASEEND
   CASESTART(2)
   auto tmp3 = SAFETRANSLATE(column_def_list_);
@@ -651,7 +654,10 @@ IR *CreateTableStatement::translate(vector<IR *> &v_ir_collector) {
   res = new IR(kUnknown, OP3("", "(", ")"), res, tmp);
   PUSH(res);
   auto tmp5 = SAFETRANSLATE(opt_without_rowid_);
-  res = new IR(kCreateTableStatement, OP0(), res, tmp5);
+  res = new IR(kUnknown, OP0(), res, tmp5);
+  PUSH(res);
+  auto tmp6 = SAFETRANSLATE(opt_strict_);
+  res = new IR(kCreateTableStatement, OP0(), res, tmp6);
   CASEEND
   SWITCHEND
   TRANSLATEEND
@@ -665,6 +671,7 @@ void CreateTableStatement::deep_delete() {
   SAFEDELETE(column_def_list_);
   SAFEDELETE(opt_without_rowid_);
   SAFEDELETE(table_constraint_list_);
+  SAFEDELETE(opt_strict_);
   delete this;
 }
 
@@ -1061,7 +1068,8 @@ IR *OptFromClause::translate(vector<IR *> &v_ir_collector) {
   SWITCHSTART
   CASESTART(0)
   res = SAFETRANSLATE(from_clause_);
-  res = new IR(kOptFromClause, OP0(), res);
+  auto tmp0 = SAFETRANSLATE(opt_column_alias_);
+  res = new IR(kOptFromClause, OP0(), res, tmp0);
   CASEEND
   CASESTART(1)
   res = new IR(kOptFromClause, "");
@@ -1172,7 +1180,7 @@ IR *OptOrder::translate(vector<IR *> &v_ir_collector) {
   res = new IR(kOptOrder, OP1("ORDER BY"), res);
   CASEEND
   CASESTART(1)
-  res = new IR(kOptOrder, "");
+  res = new IR(kOptOrder, OP1("ORDER BY 1"));
   CASEEND
   SWITCHEND
 
@@ -1214,6 +1222,14 @@ void OptWithoutRowID::deep_delete() { delete this; }
 IR *OptWithoutRowID::translate(vector<IR *> &v_ir_collector) {
   TRANSLATESTART
   res = new IR(kOptWithoutRowID, OP1(str_val_));
+  TRANSLATEEND
+}
+
+void OptStrict::deep_delete() { delete this; }
+
+IR *OptStrict::translate(vector<IR *> &v_ir_collector) {
+  TRANSLATESTART
+  res = new IR(kOptStrict, OP1(str_val_));
   TRANSLATEEND
 }
 
@@ -2237,6 +2253,7 @@ void SelectList::deep_delete() {
 
 void OptFromClause::deep_delete() {
   SAFEDELETE(from_clause_);
+  SAFEDELETE(opt_column_alias_);
   delete this;
 }
 
@@ -2739,6 +2756,9 @@ IR *ColumnConstraint::translate(vector<IR *> &v_ir_collector) {
   res = SAFETRANSLATE(expr_);
   res = new IR(kColumnConstraint, OP2("AS(", ")"), res);
   CASEEND
+  CASESTART(11)
+  res = new IR(kColumnConstraint, OP1("GENERATED ALWAYS"));
+  CASEEND
   SWITCHEND
   TRANSLATEEND
 }
@@ -2755,6 +2775,7 @@ void ColumnConstraint::deep_delete() {
   SAFEDELETE(foreign_key_clause_);
   SAFEDELETE(identifier_);
   SAFEDELETE(opt_stored_virtual_);
+  SAFEDELETE(opt_constraint_name_);
   delete this;
 }
 
@@ -3649,7 +3670,7 @@ IR *UpsertItem::translate(vector<IR *> &v_ir_collector) {
   auto tmp1 = SAFETRANSLATE(assign_list_);
   auto tmp2 = SAFETRANSLATE(opt_where_);
 
-  res = new IR(kUnknown, OP2("ON CONFLICT", "UPDATE SET"), tmp0, tmp1);
+  res = new IR(kUnknown, OP2("ON CONFLICT", "DO UPDATE SET"), tmp0, tmp1);
   PUSH(res);
   res = new IR(kUpsertItem, OP0(), res, tmp2);
 

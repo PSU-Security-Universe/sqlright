@@ -6,7 +6,7 @@ You can take two ways to prepare the docker images for `SQLRight`: download the 
 
 ```bash
 # For SQLite3 fuzzing and bisecting
-sudo docker pull steveleungsly/sqlright_sqlite:version1.0
+sudo docker pull steveleungsly/sqlright_sqlite:version1.1
 
 # For PostgreSQL fuzzing
 sudo docker pull steveleungsly/sqlright_postgres:version1.0

@@ -19,9 +19,11 @@ if [ "$1" == "SQLRight" ]; then
         elif [ "$var" == "LIKELY" ]; then
             resoutdir="$resoutdir""_LIKELY"
         elif [ "$var" == "ROWID" ]; then
-            resoutdir="resoutdir""_ROWID"
+            resoutdir="$resoutdir""_ROWID"
         elif [ "$var" == "INDEX" ]; then
-            resoutdir="resoutdir""_INDEX"
+            resoutdir="$resoutdir""_INDEX"
+        elif [ "$var" == "OPT" ]; then
+            resoutdir="$resoutdir""_OPT"
         fi
     done
 

@@ -16,7 +16,7 @@ UNIQUE_BUG_OUTPUT_DIR = os.path.join(BUG_SAMPLE_DIR, "unique_bug_output")
 COMPILE_THREAD_COUNT = 1
 COMMIT_SEARCH_RANGE = 1
 
-BEGIN_COMMIT_ID = ""  # INCLUDED!!!   Earlier commit.
+BEGIN_COMMIT_ID = "98ecc1f3f5450757a2f532d49d33aead8d86c1f6"  # INCLUDED!!!   Earlier commit.
 END_COMMIT_ID = ""  # INCLUDED!!!   Latest commit or the bug triggering commit.
 
 KNOWN_BUGGY_COMMIT = [

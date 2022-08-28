@@ -1,0 +1,4 @@
+CREATE TABLE t1(a PRIMARY KEY) WITHOUT ROWID, STRICT;
+INSERT INTO t1(a) VALUES('xyz');
+INSERT INTO t1(a) VALUES('xyz'),(4),(5.5),(NULL);
+SELECT strict FROM pragma_table_list('t1');

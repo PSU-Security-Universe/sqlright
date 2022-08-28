@@ -195,6 +195,7 @@
   V(kFunctionName)                                                             \
   V(kFunctionArgs)                                                             \
   V(kOptWithoutRowID)                                                          \
+  V(kOptStrict)                                                                \
   V(kOptUpsertClause)                                                          \
   V(kOptConstraintName)                                                        \
   V(kTableConstraint)                                                          \
@@ -393,6 +394,7 @@
   V(AssignClause)                                                              \
   V(ColumnNameList)                                                            \
   V(OptWithoutRowID)                                                           \
+  V(OptStrict)                                                                 \
   V(OptUpsertClause)                                                           \
   V(OptConstraintName)                                                         \
   V(TableConstraint)                                                           \

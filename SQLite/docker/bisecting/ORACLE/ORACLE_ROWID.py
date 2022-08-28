@@ -34,21 +34,22 @@ class Oracle_ROWID:
                 RESULT.ALL_ERROR,
             )  # Missing the outputs from the opt or the unopt. Returnning None implying errors.
         # Grab all the opt results.
-        all_results_out = []
+        res = ""
         begin_idx = []
         end_idx = []
         for m in re.finditer(r"BEGIN VERI 0", result_str):
             begin_idx.append(m.end())
         for m in re.finditer(r"END VERI 0", result_str):
             end_idx.append(m.start())
-        for i in range(min(len(begin_idx), len(end_idx))):
-            current_opt_result = result_str[begin_idx[i] : end_idx[i]]
-            if "Error" in current_opt_result:
-                all_results_out.append("Error")
-            else:
-                all_results_out.append(current_opt_result)
 
-        return all_results_out, RESULT.PASS
+        current_opt_result = result_str[begin_idx[0] : end_idx[0]]
+        if "Error" in current_opt_result:
+            res = "Error"
+            return res, RESULT.ERROR
+        else:
+            res = current_opt_result
+
+        return res, RESULT.PASS
 
     @classmethod
     def comp_query_res(cls, queries_l, all_res_str_l):
@@ -59,70 +60,59 @@ class Oracle_ROWID:
         # We only need the first query to get the VALID_TYPE_ROWID list.
         queries = queries_l[0]
 
-        valid_type_list = cls._get_valid_type_list(queries)
+        valid_type = cls._get_valid_type_list(queries)
 
         all_res_out = []
-        final_res = RESULT.PASS
 
-        for idx, valid_type in enumerate(valid_type_list):
-            if valid_type == VALID_TYPE_ROWID.NORM:
-                curr_res = cls._check_result_norm(
-                    all_res_str_l[0][idx], all_res_str_l[1][idx]
-                )
-                all_res_out.append(curr_res)
-            elif valid_type == VALID_TYPE_ROWID.DISTINCT:
-                curr_res = cls._check_result_norm(
-                    all_res_str_l[0][idx], all_res_str_l[1][idx]
-                )
-                all_res_out.append(curr_res)
-            elif valid_type == VALID_TYPE_ROWID.GROUP_BY:
-                curr_res = cls._check_result_norm(
-                    all_res_str_l[0][idx], all_res_str_l[1][idx]
-                )
-                all_res_out.append(curr_res)
-            elif valid_type == VALID_TYPE_ROWID.AVG:
-                curr_res = cls._check_result_aggr(
-                    all_res_str_l[0][idx], all_res_str_l[1][idx], valid_type
-                )
-                all_res_out.append(curr_res)
-            elif valid_type == VALID_TYPE_ROWID.COUNT:
-                curr_res = cls._check_result_aggr(
-                    all_res_str_l[0][idx], all_res_str_l[1][idx], valid_type
-                )
-                all_res_out.append(curr_res)
-            elif valid_type == VALID_TYPE_ROWID.MAX:
-                curr_res = cls._check_result_aggr(
-                    all_res_str_l[0][idx], all_res_str_l[1][idx], valid_type
-                )
-                all_res_out.append(curr_res)
-            elif valid_type == VALID_TYPE_ROWID.MIN:
-                curr_res = cls._check_result_aggr(
-                    all_res_str_l[0][idx], all_res_str_l[1][idx], valid_type
-                )
-                all_res_out.append(curr_res)
-            elif valid_type == VALID_TYPE_ROWID.SUM:
-                curr_res = cls._check_result_aggr(
-                    all_res_str_l[0][idx], all_res_str_l[1][idx], valid_type
-                )
-                all_res_out.append(curr_res)
-            else:
-                curr_res = RESULT.ERROR
-                all_res_out.append(curr_res)
+        if valid_type == VALID_TYPE_ROWID.NORM:
+            curr_res = cls._check_result_norm(
+                all_res_str_l[0], all_res_str_l[1]
+            )
+            all_res_out.append(curr_res)
+        elif valid_type == VALID_TYPE_ROWID.DISTINCT:
+            curr_res = cls._check_result_norm(
+                all_res_str_l[0], all_res_str_l[1]
+            )
+            all_res_out.append(curr_res)
+        elif valid_type == VALID_TYPE_ROWID.GROUP_BY:
+            curr_res = cls._check_result_norm(
+                all_res_str_l[0], all_res_str_l[1]
+            )
+            all_res_out.append(curr_res)
+        elif valid_type == VALID_TYPE_ROWID.AVG:
+            curr_res = cls._check_result_aggr(
+                all_res_str_l[0], all_res_str_l[1], valid_type
+            )
+            all_res_out.append(curr_res)
+        elif valid_type == VALID_TYPE_ROWID.COUNT:
+            curr_res = cls._check_result_aggr(
+                all_res_str_l[0], all_res_str_l[1], valid_type
+            )
+            all_res_out.append(curr_res)
+        elif valid_type == VALID_TYPE_ROWID.MAX:
+            curr_res = cls._check_result_aggr(
+                all_res_str_l[0], all_res_str_l[1], valid_type
+            )
+            all_res_out.append(curr_res)
+        elif valid_type == VALID_TYPE_ROWID.MIN:
+            curr_res = cls._check_result_aggr(
+                all_res_str_l[0], all_res_str_l[1], valid_type
+            )
+            all_res_out.append(curr_res)
+        elif valid_type == VALID_TYPE_ROWID.SUM:
+            curr_res = cls._check_result_aggr(
+                all_res_str_l[0], all_res_str_l[1], valid_type
+            )
+            all_res_out.append(curr_res)
+        else:
+            curr_res = RESULT.ERROR
+            all_res_out.append(curr_res)
 
-        for curr_res_out in all_res_out:
-            if curr_res_out == RESULT.FAIL:
-                final_res = RESULT.FAIL
-                break
-
-        is_all_query_return_errors = True
-        for curr_res_out in all_res_out:
-            if curr_res_out != RESULT.ERROR:
-                is_all_query_return_errors = False
-                break
-        if is_all_query_return_errors:
-            final_res = RESULT.ALL_ERROR
-
-        return final_res, all_res_out
+        if all_res_out[0] == RESULT.Error:
+            return RESULT.ALL_ERROR, all_res_out
+        else:
+            tmp_res = all_res_out[0]
+            return tmp_res, all_res_out
 
     @classmethod
     def _get_valid_type_list(cls, query: str):
@@ -135,7 +125,6 @@ class Oracle_ROWID:
             return []  # query is not making sense at all.
 
         # Grab all the opt queries, detect its valid_type, and return.
-        valid_type_list = []
         begin_idx = []
         end_idx = []
         for m in re.finditer(r"SELECT 'BEGIN VERI 0';", query):
@@ -144,11 +133,9 @@ class Oracle_ROWID:
             r"SELECT 'END VERI 0';", query
         ):  # Might contains additional unnecessary characters, such as SELECT in the SELECT 97531;
             end_idx.append(m.start())
-        for i in range(min(len(begin_idx), len(end_idx))):
-            current_opt_query = query[begin_idx[i] : end_idx[i]]
-            valid_type_list.append(cls._get_valid_type(current_opt_query))
 
-        return valid_type_list
+        current_opt_query = query[begin_idx[0] : end_idx[0]]
+        return cls._get_valid_type(current_opt_query)
 
     @classmethod
     def _get_valid_type(cls, query: str):
