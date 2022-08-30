@@ -9,6 +9,10 @@ SCRIPT_EXEC=$(cat << EOF
 
 mkdir -p /home/sqlite/fuzzing/Bug_Analysis/bug_samples
 
+cd /home/sqlite/sqlite
+
+git pull origin master &> /dev/null
+
 cd /home/sqlite/fuzzing/fuzz_root
 
 cp /home/sqlite/src/afl-fuzz ./

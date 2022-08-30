@@ -8,6 +8,10 @@ chown -R sqlite:sqlite /home/sqlite/sqlite_bisecting_binary
 
 SCRIPT_EXEC=$(cat << EOF
 
+cd /home/sqlite/sqlite_bisecting_binary
+
+git pull origin master &> /dev/null
+
 cd /home/sqlite/
 
 python3 bisecting $@

@@ -71,7 +71,8 @@ RUN cp -r sqlite sqlite_ori
 
 ## Build instrumented SQLite3
 WORKDIR /home/sqlite/sqlite
-RUN git checkout version-3.34.0
+#RUN git checkout version-3.34.0
+RUN git checkout master
 ENV CXX=/home/sqlite/AFL/afl-clang-fast++
 ENV CC=/home/sqlite/AFL/afl-clang-fast
 RUN ./configure --enable-debug --enable-fts5
