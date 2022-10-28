@@ -32,7 +32,7 @@ The overview of `SQLRight` is illustrated by the diagram below.
 ## Authors
 
 - Yu Liang yuliang@psu.edu
-- Song Liu svl6237@psu.edu
+- Song Liu songliu@psu.edu
 - Hong Hu honghu@psu.edu
 
 ## Publications
