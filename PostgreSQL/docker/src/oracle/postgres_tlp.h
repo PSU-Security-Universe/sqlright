@@ -46,11 +46,11 @@ private:
     "SELECT * FROM x WHERE x=0;",
     "SELECT x FROM x WHERE x=0 GROUP BY x;",
     "SELECT x FROM x WHERE x=0 HAVING x;", // TODO:: Implement HAVING.
-    "SELECT DISTINCT x FROM x=0 WHERE x;",
-    "SELECT MIN(x) FROM x=0 WHERE x;",
-    "SELECT MAX(x) FROM x=0 WHERE x;",
-    "SELECT SUM(x) FROM x=0 WHERE x;",
-    "SELECT AVG(x) FROM x=0 WHERE x;"
+    "SELECT DISTINCT x FROM x WHERE x=0;",
+    "SELECT MIN(x) FROM x WHERE x=0;",
+    "SELECT MAX(x) FROM x WHERE x=0;",
+    "SELECT SUM(x) FROM x WHERE x=0;",
+    "SELECT AVG(x) FROM x WHERE x=0;"
   };
 
   string oracle_type = "TLP";

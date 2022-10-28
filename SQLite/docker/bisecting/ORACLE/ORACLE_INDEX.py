@@ -107,7 +107,7 @@ class Oracle_INDEX:
             curr_res = RESULT.ERROR
             all_res_out.append(curr_res)
 
-        if all_res_out[0] == RESULT.Error:
+        if all_res_out[0] == RESULT.ERROR:
             return RESULT.ALL_ERROR, all_res_out
         else:
             tmp_res = all_res_out[0]

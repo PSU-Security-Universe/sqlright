@@ -86,6 +86,7 @@ class Oracle_TLP:
             curr_res = cls._check_result_norm(
                 all_res_str_l[0], all_res_str_l[1]
             )
+            all_res_out.append(curr_res)
 
         elif (
             valid_type == VALID_TYPE_TLP.DISTINCT
@@ -113,7 +114,7 @@ class Oracle_TLP:
                 "Encounter unknown VALID_TYPE_TLP in the check_query_exec_correctness_under_commitID func. "
             )
 
-        if all_res_out[0] == RESULT.Error:
+        if all_res_out[0] == RESULT.ERROR:
             return RESULT.ALL_ERROR, all_res_out
         else:
             tmp_res = all_res_out[0]

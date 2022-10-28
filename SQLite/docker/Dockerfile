@@ -80,7 +80,7 @@ RUN make -j$(nproc)
 
 ## Build uninstrumented SQLite3
 WORKDIR /home/sqlite/sqlite_ori
-RUN git checkout version-3.34.0
+RUN git checkout master
 ENV CXX=g++-9
 ENV CC=gcc-9
 RUN ./configure --enable-debug --enable-fts5
@@ -119,9 +119,16 @@ COPY bisecting /home/sqlite/bisecting
 RUN chown -R sqlite:sqlite /home/sqlite/bisecting
 
 # Setup the SQLite bisecting cached binaries. 
-USER root
-COPY sqlite_bisecting_binary /home/sqlite/sqlite_bisecting_binary
-RUN chown -R sqlite:sqlite /home/sqlite/sqlite_bisecting_binary
+#USER root
+#COPY sqlite_bisecting_binary /home/sqlite/sqlite_bisecting_binary
+#RUN chown -R sqlite:sqlite /home/sqlite/sqlite_bisecting_binary
+
+# Also, setup the bisecting sqlite folder. 
+USER sqlite
+WORKDIR /home/sqlite
+RUN git clone https://github.com/sqlite/sqlite.git ./sqlite_bisecting_binary
+WORKDIR /home/sqlite/sqlite_bisecting_binary
+RUN mkdir -p bld
 
 # At last, setup the Docker helper scripts
 USER root
